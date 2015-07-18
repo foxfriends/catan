@@ -1,0 +1,16 @@
+{
+  "name": "Catan",
+  "version": "0.0.1",
+  "description": "Online version of the game by Klaus Teuber",
+  "main": "server.js",
+  "scripts": {
+    "test": "",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "catan",
+    "boardgame"
+  ],
+  "author": "Cameron Eldridge",
+  "license": "ISC"
+}

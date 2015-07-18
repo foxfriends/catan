@@ -1,0 +1,256 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+
+        <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="style/style.css" type="text/css">
+        <title>Catan</title>
+        <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+        <script src="script/catan.js"></script>
+    </head>
+    <body onload="init()">
+        <div id="game">
+            <div id="tiles">
+                <div class="tile_row">
+                    <div class="tile"></div>
+                    <div class="tile"></div>
+                    <div class="tile"></div>
+                </div>
+                <div class="tile_row">
+                    <div class="tile"></div>
+                    <div class="tile"></div>
+                    <div class="tile"></div>
+                    <div class="tile"></div>
+                </div>
+                <div class="tile_row">
+                    <div class="tile"></div>
+                    <div class="tile"></div>
+                    <div class="tile"></div>
+                    <div class="tile"></div>
+                    <div class="tile"></div>
+                </div>
+                <div class="tile_row">
+                    <div class="tile"></div>
+                    <div class="tile"></div>
+                    <div class="tile"></div>
+                    <div class="tile"></div>
+                </div>
+                <div class="tile_row">
+                    <div class="tile"></div>
+                    <div class="tile"></div>
+                    <div class="tile"></div>
+                </div>
+            </div>
+            <div id="roads">
+                <div class="road_row long">
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                </div>
+                <div class="road_row tall">
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                </div>
+                <div class="road_row long">
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                </div>
+                <div class="road_row tall">
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                </div>
+                <div class="road_row long">
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                </div>
+                <div class="road_row tall">
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                </div>
+                <div class="road_row long rev">
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                </div>
+                <div class="road_row tall">
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                </div>
+                <div class="road_row long rev">
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                </div>
+                <div class="road_row tall">
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                </div>
+                <div class="road_row long rev">
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                    <div class="road"></div>
+                </div>
+            </div>
+            <div id="houses">
+                <div class="house_row">
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                </div>
+                <div class="house_row">
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                </div>
+                <div class="house_row">
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                </div>
+                <div class="house_row">
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                </div>
+                <div class="house_row">
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                </div>
+                <div class="house_row">
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                    <div class="house"></div>
+                </div>
+            </div>
+            <div id="players">
+                <div class="player">
+                    <div class="name"></div>
+                    <div class="cards"></div>
+                    <div class="points"></div>
+                    <div class="prizes"></div>
+                    <div class="cards"></div>
+                </div>
+                <div class="player" style="left: 35%;">
+                    <div class="name"></div>
+                    <div class="cards"></div>
+                    <div class="points"></div>
+                    <div class="prizes"></div>
+                    <div class="cards"></div>
+                </div>
+                <div class="player" style="right: 0;">
+                    <div class="name"></div>
+                    <div class="cards"></div>
+                    <div class="points"></div>
+                    <div class="prizes"></div>
+                    <div class="cards"></div>
+                </div>
+                <div class="player me">
+                    <div class="name"></div>
+                    <div class="cards"></div>
+                    <div class="points"></div>
+                    <div class="prizes"></div>
+                    <div class="cards"></div>
+                </div>
+            </div>
+            <div id="dice">
+                <img src="image/ydie1.png" id="yellowdie">
+                <img src="image/rdie1.png" id="reddie">
+            </div>
+        </div>
+        <div id="chatbox_container"><span class="spacer"></span><div id="chatbox"></div></div>
+        <div class="overlay" id="start_form" style="display: block">
+            <form action"#" onsubmit="return false;">
+                <input type="text" name="game" id="game_name" placeholder="Game name" autocomplete="off" required>
+                <input type="text" name="name" id="your_name" placeholder="Your name" autocomplete="off" required>
+                <button onclick="init();"> Start game </button>
+            </form>
+            <div id="start_form_error"></div>
+        </div>
+        <div class="overlay" id="request_form"></div>
+        <button onclick="start_game()" id="start_game">Start!</button>
+    </body>
+</html>
