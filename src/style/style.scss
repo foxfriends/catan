@@ -1,0 +1,225 @@
+* {
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    font-family: "Lato";
+}
+body {
+    position: absolute;
+    top: 100px;
+    background-image: url("/image/water_tiled.png");
+    background-position: 0 100px;
+    height: 1027px;
+}
+div.tile {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    height: 231px;
+    width: 200px;
+    text-align: center;
+    transition: left 0.5s,
+                top 0.5s;
+}
+span.number {
+    pointer-events: none;
+    display: inline-block;
+    text-align: center;
+    margin: 0 auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    font-family: "Lato";
+    font-weight: 700;
+    font-size: 30px;
+    background-color: #AE985A;
+    border: 1px #AE985A outset;
+    color: #555555;
+    margin-top: 8px;
+}
+span.number.red {
+    color: #BB0000;
+}
+div.pasture {
+    background-image: url("/image/wool.png");
+}
+div.field {
+    background-image: url("/image/wheat.png");
+}
+div.forest {
+    background-image: url("/image/wood.png");
+}
+div.quarry {
+    background-image: url("/image/brick.png");
+}
+div.mountain {
+    background-image: url("/image/ore.png");
+}
+div.water {
+    background-image: url("/image/water.png");
+}
+div.desert {
+    background-image: url("/image/desert.png");
+}
+div.road_row.long div.road:nth-child(2n) {
+    transform: rotate(30deg);
+}
+div.road_row.long div.road:nth-child(2n+1) {
+    transform: rotate(-30deg);
+}
+div.road_row.long.rev div.road:nth-child(2n) {
+    transform: rotate(-30deg);
+}
+div.road_row.long.rev div.road:nth-child(2n+1) {
+    transform: rotate(30deg);
+}
+div.road_row.tall div.road {
+    transform: rotate(90deg) translate(-8px, 0);
+}
+div.road {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100px;
+    height: 16px;
+    background-color: black;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+div.red {
+    background-color: red;
+}
+div.orange {
+    background-color: orange;
+}
+div.blue {
+    background-color: blue;
+}
+div.white {
+    background-color: white;
+}
+div.house {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 32px;
+    height: 32px;
+    background-color: black;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+div.player {
+    position: fixed;
+    height: 75px;
+    width: 30%;
+    background-color: RGBA(255, 255, 255, 0.5);
+}
+div.player:not(.me) {
+    top: 0;
+}
+div.player.me {
+    width: 100%;
+    bottom: 0;
+}
+
+div.overlay {
+    box-sizing: border-box;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    padding: 300px;
+    width: 100%;
+    z-index: 1;
+    background-color: RGBA(0, 0, 0, 0.9);
+    text-align: center;
+    color: white;
+    display: none;
+}
+div.overlay input, div.overlay button {
+    box-sizing: border-box;
+    display: block;
+    padding: 2px;
+    margin: 4px auto;
+    width: 500px;
+    height: 32px;
+    background-color: RGBA(255, 255, 255, 0.8);
+    border-radius: 3px;
+    border: 2px solid #DDDDDD;
+    font-size: 20px;
+}
+
+div.overlay button:hover, div.overlay button:focus, div.overlay input:focus {
+    background-color: RGBA(255, 255, 255, 1);
+}
+
+div.color_selector {
+    width: 100px;
+    height: 100px;
+    margin: 16px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+span.spacer {
+    display: inline-block;
+    width: 0;
+    height: 100%;
+    vertical-align: bottom;
+}
+
+div#chatbox_container {
+    vertical-align: bottom;
+    position: fixed;
+    left: 0;
+    bottom: 116px;
+    width: 500px;
+    height: 32px;
+    background-color: RGBA(0, 0, 0, 0.3);
+    overflow: hidden;
+    color: white;
+}
+div#chatbox {
+    position: absolute;
+    bottom: 0;
+    display: inline-block;
+    width: 100%;
+}
+div#chatbox p {
+    min-height: 32px;
+}
+div#chatbox input {
+    display: block;
+    height: 32px;
+    width: 100%;
+    border: none;
+    background-color: RGBA(255, 255, 255, 0.6);
+    color: black;
+
+}
+div#chatbox p:nth-of-type(2n) {
+    background-color: RGBA(255, 255, 255, 0.8);
+}
+button#start_game {
+    display: none;
+    position: fixed;
+    left: 25%;
+    top: 25%;
+    width: 50%;
+    height: 50%;
+    background-color: RGBA(0,0,0,0.6);
+    color: white;
+    border-radius: 15px;
+    font-size: 30px;
+}
+button#start_game:hover, button#start_game:focus {
+    background-color: RGBA(0,0,0,0.8);
+}
+
+div#dice {
+    position: fixed;
+    left: 32px;
+    top: 107px;
+}

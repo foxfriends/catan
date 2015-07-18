@@ -1,16 +1,30 @@
-var express = require("express"),
-    app = express(),
-    http = require("http"),
-    server = app.listen(8888, function() {console.log("Server started at 8888");}),
-    io = require("socket.io")(server),
-    game = require("./script/game.js"),
-    data = [];
+"use strict";
+let express = require("express");
+let app = express();
+let http = require("http");
+let server = app.listen(8888, () => {console.log("Server started at 8888");});
+let io = require("socket.io")(server);
+let game = require("./script/game.es6");
+let data = [];
 
-function adjacent(i, j, typea, typeb) {
-    var adj = {
+var adjacent = (i, j, typea, typeb) => {
+    let roads = [
+        [-1,-1,-1,-1,-1,-1],
+        [-1,-1,-1,-1],
+        [-1,-1,-1,-1,-1,-1,-1,-1],
+        [-1,-1,-1,-1,-1],
+        [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+        [-1,-1,-1,-1,-1,-1],
+        [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+        [-1,-1,-1,-1,-1],
+        [-1,-1,-1,-1,-1,-1,-1,-1],
+        [-1,-1,-1,-1],
+        [-1,-1,-1,-1,-1,-1]
+    ];
+    let adj = {
         tile: {
-            road: (function(i, j) {
-                var x = [
+            road: ((i, j) => {
+                let x = [
                     [
                         [i * 2, j * 2], [i * 2, j * 2 + 1],
                         [i * 2 + 1, j * 2], [i * 2 + 1, j * 2 + 1],
@@ -29,8 +43,8 @@ function adjacent(i, j, typea, typeb) {
                 ];
                 return x[Math.floor(i / 2)];
             })(),
-            house: (function(i, j) {
-                var x = [
+            house: ((i, j) => {
+                let x = [
                     [
                         [i * 2, j * 2], [i * 2, j * 2 + 1], [i * 2, j * 2 + 2],
                         [i * 2 + 1, j * 2 + 1], [i * 2 + 1, j * 2 + 2], [i * 2 + 1, j * 2 + 3]
@@ -48,8 +62,8 @@ function adjacent(i, j, typea, typeb) {
             })()
         },
         road: {
-            road: (function(i, j) {
-                var x, y, set;
+            road: ((i, j) => {
+                let x, y, set;
                 if(i % 2) {
                     x = [
                         [
@@ -92,9 +106,9 @@ function adjacent(i, j, typea, typeb) {
                     return set;
                 }
             })(),
-            house: (function(i, j) {
+            house: ((i, j) => {
                 if(i % 2) {
-                    var x = [
+                    let x = [
                         [
                             [i - 1, j * 2], [i + 1, j * 2 + 1]
                         ],
@@ -112,8 +126,8 @@ function adjacent(i, j, typea, typeb) {
             })()
         },
         house: {
-            road: (function(i, j) {
-                var x = [
+            road: ((i, j) => {
+                let x = [
                     [
                         [i * 2, j - 1], [i * 2, j],
                         [i * 2 + (j & 0) - (j & 1), Math.floor(j / 2)]
@@ -123,16 +137,16 @@ function adjacent(i, j, typea, typeb) {
                         [i * 2 + (j & 0) - (j & 1), Math.floor(j / 2)]
                     ]
                 ];
-                var set = x[i > 2];
-                for(y = set.length - 1; y >= 0; y--) {
+                let set = x[i > 2];
+                for(let y = set.length - 1; y >= 0; y--) {
                     if(set[y][0] > roads.length  || set[y][0] < 0 || set[y][1] < 0 || set[y][1] > roads[set[y][0]].length) {
                         set.splice(y, 1);
                     }
                 }
                 return set;
             })(),
-            tile: (function(i, j) {
-                var x = [
+            tile: ((i, j) => {
+                let x = [
                     [
                         [i - 1, j / 2 - 1],
                         [i, j / 2 - 1],
@@ -150,12 +164,12 @@ function adjacent(i, j, typea, typeb) {
         }
     };
     return adj[typea][typeb](i, j);
-}
+};
 
 app.use("", express.static("public_html"));
 
-io.on("connection", function(socket) {
-    socket.on("join game", function(name) {
+io.on("connection", (socket) => {
+    socket.on("join game", (name) => {
         socket.your_name = name.name;
         socket.game_name = name.game;
         socket.join(socket.game_name);
@@ -170,7 +184,7 @@ io.on("connection", function(socket) {
             data[socket.game_name].robber_clear = 4;
             data[socket.game_name].trade = [[],[]];
         }
-        var i;
+        let i;
         for(i = 0; i < data[socket.game_name].data.players.length; i++) {
             if(data[socket.game_name].data.players[i].name == socket.your_name) {
                 break;
@@ -194,8 +208,8 @@ io.on("connection", function(socket) {
         data[socket.game_name].population++;
         io.to(socket.game_name).emit("new data", data[socket.game_name].data);
     });
-    socket.on("choose color", function(color) {
-        for(var i = 0; i < data[socket.game_name].data.players.length; i++) {
+    socket.on("choose color", (color) => {
+        for(let i = 0; i < data[socket.game_name].data.players.length; i++) {
             if(data[socket.game_name].data.players[i].name == color.name) {
                 data[socket.game_name].data.players[i].color = color.color;
                 break;
@@ -203,22 +217,22 @@ io.on("connection", function(socket) {
         }
         io.to(socket.game_name).emit("part data", {part: "players", val: data[socket.game_name].data.players});
     });
-    socket.on("chat message", function(msg) {
+    socket.on("chat message", (msg) => {
         io.to(socket.game_name).emit("new message", msg.author + ": " + msg.body);
     });
-    socket.on("start game", function() {
+    socket.on("start game", () => {
         data[socket.game_name].data.game_started = true;
-        for(var i = data[socket.game_name].data.players.length; i > 0; i--) {
-            var r = Math.floor(Math.random() * i);
-            var t = data[socket.game_name].data.players[r];
+        for(let i = data[socket.game_name].data.players.length; i > 0; i--) {
+            let r = Math.floor(Math.random() * i);
+            let t = data[socket.game_name].data.players[r];
             data[socket.game_name].data.players[r] = data[socket.game_name].data.players[i-1];
             data[socket.game_name].data.players[i-1] = t;
         }
         data[socket.game_name].data.turn = 0;
         io.to(socket.game_name).emit("new data", data[socket.game_name].data);
     });
-    socket.on("roll", function() {
-        var x = Math.floor(Math.random() * 6) + 1,
+    socket.on("roll", () => {
+        let x = Math.floor(Math.random() * 6) + 1,
             y = Math.floor(Math.random() * 6) + 1,
             cards;
         data[socket.game_name].data.dice = [x,y];
@@ -226,13 +240,14 @@ io.on("connection", function(socket) {
             io.to(socket.game_name).emit("turn part", {type: "robber move"});
         } else {
             //Calculate cards
+
             io.to(socket.game_name).emit("turn part", {type: "roll", val: {dice: [x,y], hands: cards}});
         }
     });
-    socket.on("knight", function() {
+    socket.on("knight", () => {
         io.to(socket.game_name).emit("turn part", {type: "robber move"});
     });
-    socket.on("disconnect", function() {
+    socket.on("disconnect", () => {
         if(data[socket.game_name] !== undefined) {
             data[socket.game_name].population--;
             if(data[socket.game_name].population === 0) {
