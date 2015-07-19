@@ -75,5 +75,5 @@ $RECYCLE.BIN/
 *.lnk
 
 # Extra
-public_html
-games
+public_html/*
+games/*
