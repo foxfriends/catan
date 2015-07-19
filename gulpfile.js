@@ -7,5 +7,5 @@ files.forEach(function(f) {
     require('./gulptasks/' + f);
 });
 
-gulp.task('build', ['clean', 'transpile', 'move_image', 'move_html', 'sass']);
+gulp.task('build', ['clean', 'transpile', 'compress_image', 'move_html', 'sass']);
 gulp.task('default', ['build']);

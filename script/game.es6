@@ -4,9 +4,7 @@ let fs = require("fs");
 let shuffle = (array) => {
     for(var i = array.length; i > 0; i--) {
         var r = Math.floor(Math.random() * i);
-        var t = array[r];
-        array[r] = array[i-1];
-        array[i-1] = t;
+        [ array[r], array[i-1] ] = [array[i-1], array[r]];
     }
     return array;
 };
@@ -40,8 +38,6 @@ class Game {
         ];
         let ports = shuffle([0,1,2,3,4,5,5,5,5]);
         let dev_cards = shuffle([0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,2,2,3,3,4,4]);
-
-        console.log(`New game created: ${name}`);
 
         let data = {
             tiles: tiles,
@@ -78,9 +74,11 @@ class Game {
             players: [],
             game_started: false,
             turn: -1,
+            setup: 0,
             dice: [1,1]
         };
 
+        console.log(`New game created: ${name}`);
         this.save(name, data);
 
         return data;
