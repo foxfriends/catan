@@ -6,8 +6,10 @@ let server = app.listen(8888, () => {
   console.log("Server started at 8888");
 });
 let io = require("socket.io")(server);
+let ss = require("socket.io-stream")(io);
 let game = require("./script/game.es6");
 let data = [];
+let stream = require("stream");
 
 let adjacent = (i, j, typea, typeb) => {
   let roads = [
@@ -33,65 +35,65 @@ let adjacent = (i, j, typea, typeb) => {
   ];
   let adj = {
     tile: {
-      road: ((i, j) => {
+      road: ((a, b) => {
         let x = [
           [
-            [i * 2, j * 2], [i * 2, j * 2 + 1],
-            [i * 2 + 1, j * 2], [i * 2 + 1, j * 2 + 1],
-            [i * 2 + 2, j * 2 + 1], [i * 2 + 2, j * 2 + 2]
+            [a * 2, b * 2], [a * 2, b * 2 + 1],
+            [a * 2 + 1, b * 2], [a * 2 + 1, b * 2 + 1],
+            [a * 2 + 2, b * 2 + 1], [a * 2 + 2, b * 2 + 2]
           ],
           [
-            [i * 2, j * 2 + 1], [i * 2, j * 2 + 2],
-            [i * 2 + 1, j * 2], [i * 2 + 1, j * 2 + 1],
-            [i * 2 + 2, j * 2 + 1], [i * 2 + 2, j * 2 + 2]
+            [a * 2, b * 2 + 1], [a * 2, b * 2 + 2],
+            [a * 2 + 1, b * 2], [a * 2 + 1, b * 2 + 1],
+            [a * 2 + 2, b * 2 + 1], [a * 2 + 2, b * 2 + 2]
           ],
           [
-            [i * 2, j * 2 + 1], [i * 2, j * 2 + 2],
-            [i * 2 + 1, j * 2], [i * 2 + 1, j * 2 + 1],
-            [i * 2 + 2, j * 2], [i * 2 + 2, j * 2 + 1]
+            [a * 2, b * 2 + 1], [a * 2, b * 2 + 2],
+            [a * 2 + 1, b * 2], [a * 2 + 1, b * 2 + 1],
+            [a * 2 + 2, b * 2], [a * 2 + 2, b * 2 + 1]
           ]
         ];
-        return x[Math.floor(i / 2)];
-      })(),
-      house: ((i, j) => {
+        return x[Math.floor(a / 2)];
+      }),
+      house: ((a, b) => {
         let x = [
           [
-            [i * 2, j * 2], [i * 2, j * 2 + 1], [i * 2, j * 2 + 2],
-            [i * 2 + 1, j * 2 + 1], [i * 2 + 1, j * 2 + 2], [i * 2 + 1, j * 2 + 3]
+            [a * 2, b * 2], [a * 2, b * 2 + 1], [a * 2, b * 2 + 2],
+            [a * 2 + 1, b * 2 + 1], [a * 2 + 1, b * 2 + 2], [a * 2 + 1, b * 2 + 3]
           ],
           [
-            [i * 2, j * 2 + 1], [i * 2, j * 2 + 2], [i * 2, j * 2 + 3],
-            [i * 2 + 1, j * 2 + 1], [i * 2 + 1, j * 2 + 2], [i * 2 + 1, j * 2 + 3]
+            [a * 2, b * 2 + 1], [a * 2, b * 2 + 2], [a * 2, b * 2 + 3],
+            [a * 2 + 1, b * 2 + 1], [a * 2 + 1, b * 2 + 2], [a * 2 + 1, b * 2 + 3]
           ],
           [
-            [i * 2, j * 2 + 1], [i * 2, j * 2 + 2], [i * 2, j * 2 + 3],
-            [i * 2 + 1, j * 2], [i * 2 + 1, j * 2 + 1], [i * 2 + 1, j * 2 + 2]
+            [a * 2, b * 2 + 1], [a * 2, b * 2 + 2], [a * 2, b * 2 + 3],
+            [a * 2 + 1, b * 2], [a * 2 + 1, b * 2 + 1], [a * 2 + 1, b * 2 + 2]
           ]
         ];
-        return x[Math.floor(i / 2)];
-      })()
+        return x[Math.floor(a / 2)];
+      })
     },
     road: {
-      road: ((i, j) => {
+      road: ((a, b) => {
         let x, y, set;
-        if (i % 2) {
+        if (a % 2) {
           x = [
             [
-              [i - 1, j * 2 - 1], [i - 1, j * 2],
-              [i + 1, j * 2], [i + 1, j * 2 + 1]
+              [a - 1, b * 2 - 1], [a - 1, b * 2],
+              [a + 1, b * 2], [a + 1, b * 2 + 1]
             ],
             [
-              [i - 1, j * 2 - 1], [i - 1, j * 2],
-              [i + 1, j * 2], [i + 1, j * 2 + 1]
+              [a - 1, b * 2 - 1], [a - 1, b * 2],
+              [a + 1, b * 2], [a + 1, b * 2 + 1]
             ],
             [
-              [i - 1, j * 2], [i - 1, j * 2 + 1],
-              [i + 1, j * 2 - 1], [i + 1, j * 2]
+              [a - 1, b * 2], [a - 1, b * 2 + 1],
+              [a + 1, b * 2 - 1], [a + 1, b * 2]
             ]
           ];
-          set = x[1 - (i < 5) + (i > 5)];
+          set = x[1 - (a < 5) + (a > 5)];
           for (y = set.length - 1; y >= 0; y--) {
-            if (set[y][0] > roads.length || set[y][0] < 0 || set[y][1] < 0 || set[y][1] > roads[set[y][0]].length) {
+            if (set[y][0] >= roads.length || set[y][0] < 0 || set[y][1] < 0 || set[y][1] >= roads[set[y][0]].length) {
               set.splice(y, 1);
             }
           }
@@ -99,97 +101,97 @@ let adjacent = (i, j, typea, typeb) => {
         } else {
           x = [
             [
-              [i, j - 1], [i, j + 1],
-              [i - 1, Math.floor(j / 2)], [i + 1, Math.ceil(j / 2)]
+              [a, b - 1], [a, b + 1],
+              [a - 1, Math.floor(b / 2)], [a + 1, Math.ceil(b / 2)]
             ],
             [
-              [i, j - 1], [i, j + 1],
-              [i + 1, Math.ceil(j / 2)], [i + 1, Math.floor(j / 2)]
+              [a, b - 1], [a, b + 1],
+              [a + 1, Math.ceil(b / 2)], [a + 1, Math.floor(b / 2)]
             ]
           ];
-          set = x[Math.floor(i / 6)];
+          set = x[Math.floor(a / 6)];
           for (y = set.length - 1; y >= 0; y--) {
-            if (set[y][0] > roads.length || set[y][0] < 0 || set[y][1] < 0 || set[y][1] > roads[set[y][0]].length) {
+            if (set[y][0] >= roads.length || set[y][0] < 0 || set[y][1] < 0 || set[y][1] >= roads[set[y][0]].length) {
               set.splice(y, 1);
             }
           }
           return set;
         }
-      })(),
-      house: ((i, j) => {
-        if (i % 2) {
+      }),
+      house: ((a, b) => {
+        if (a % 2) {
           let x = [
             [
-              [i - 1, j * 2], [i + 1, j * 2 + 1]
+              [a - 1, b * 2], [a + 1, b * 2 + 1]
             ],
             [
-              [i - 1, j * 2], [i + 1, j * 2]
+              [a - 1, b * 2], [a + 1, b * 2]
             ],
             [
-              [i - 1, j * 2 + 1], [i + 1, j * 2]
+              [a - 1, b * 2 + 1], [a + 1, b * 2]
             ]
           ];
-          return x[1 - (i < 5) + (i > 5)];
+          return x[1 - (a < 5) + (a > 5)];
         } else {
-          return [[i, j], [i, j + 1]];
+          return [[a, b], [a, b + 1]];
         }
-      })()
+      })
     },
     house: {
-      road: ((i, j) => {
+      road: ((a, b) => {
         let x = [
           [
-            [i * 2, j - 1], [i * 2, j],
-            [i * 2 + (j & 0) - (j & 1), Math.floor(j / 2)]
+            [a * 2, b - 1], [a * 2, b],
+            [a * 2 + (~b & 1) - (b & 1), Math.floor(b / 2)]
           ],
           [
-            [i * 2, j - 1], [i * 2, j],
-            [i * 2 - (j & 0) + (j & 1), Math.floor(j / 2)]
+            [a * 2, b - 1], [a * 2, b],
+            [a * 2 - (~b & 1) + (b & 1), Math.floor(b / 2)]
           ]
         ];
-        let set = x[i > 2];
+        let set = x[0 + (a > 2)];
         for (let y = set.length - 1; y >= 0; y--) {
-          if (set[y][0] > roads.length || set[y][0] < 0 || set[y][1] < 0 || set[y][1] > roads[set[y][0]].length) {
+          if (set[y][0] >= roads.length || set[y][0] < 0 || set[y][1] < 0 || set[y][1] >= roads[set[y][0]].length) {
             set.splice(y, 1);
           }
         }
         return set;
-      })(),
-      house: ((i, j) => {
+      }),
+      house: ((a, b) => {
         let x = [
           [
-            [i, j - 1], [i, j + 1],
-            [i + (j & 0) - (j & 1), j + (j & 0) - (j & 1)]
+            [a, b - 1], [a, b + 1],
+            [a + (~b & 1) - (b & 1), b + (~b & 1) - (b & 1)]
           ],
           [
-            [i, j - 1], [i, j + 1],
-            [i - (j & 0) + (j & 1), j - (j & 0) + (j & 1)]
+            [a, b - 1], [a, b + 1],
+            [a - (~b & 1) + (b & 1), b - (~b & 1) + (b & 1)]
           ]
         ];
-        let set = x[i > 2];
+        let set = x[0 + (a > 2)];
         for (let y = set.length - 1; y >= 0; y--) {
-          if (set[y][0] > houses.length || set[y][0] < 0 || set[y][1] < 0 || set[y][1] > houses[set[y][0]].length) {
+          if (set[y][0] >= houses.length || set[y][0] < 0 || set[y][1] < 0 || set[y][1] >= houses[set[y][0]].length) {
             set.splice(y, 1);
           }
         }
         return set;
-      })(),
-      tile: ((i, j) => {
+      }),
+      tile: ((a, b) => {
         let x = [
           [
-            [i - 1, j / 2 - 1],
-            [i, j / 2 - 1],
-            [i, j / 2]
+            [a - 1, b / 2 - 1],
+            [a, b / 2 - 1],
+            [a, b / 2]
           ],
           [
-            [i - 1, (j - 1) / 2 - 1],
-            [i - 1, (j - 1) / 2],
-            [i, (j - 1) / 2]
+            [a - 1, (b - 1) / 2 - 1],
+            [a - 1, (b - 1) / 2],
+            [a, (b - 1) / 2]
           ],
 
         ];
-        return x[i % 2];
-      })()
+        return x[a % 2];
+      })
     }
   };
   return adj[typea][typeb](i, j);
@@ -199,9 +201,10 @@ app.use("", express.static("public_html"));
 
 io.on("connection", (socket) => {
   //Setup
-  socket.on("join game", (name) => {
+  socket.on("join game", (name, res) => {
     socket.your_name = name.name;
     socket.game_name = name.game;
+    console.log(`${socket.your_name} is attempting to join ${socket.game_name}`);
     socket.join(socket.game_name);
     if (data[socket.game_name] === undefined) {
       data[socket.game_name] = {};
@@ -213,6 +216,8 @@ io.on("connection", (socket) => {
       data[socket.game_name].population = 0;
       data[socket.game_name].robber_clear = 4;
       data[socket.game_name].trade = [[], []];
+      data[socket.game_name].songs = [];
+      data[socket.game_name].songs_playing = 0;
     }
     let i;
     for (i = 0; i < data[socket.game_name].data.players.length; i++) {
@@ -229,6 +234,7 @@ io.on("connection", (socket) => {
       } else {
         socket.emit("game full");
         socket.leave(socket.game_name);
+        res(false);
         return;
       }
     }
@@ -239,6 +245,7 @@ io.on("connection", (socket) => {
       }
     }
     data[socket.game_name].population++;
+    res(true);
     io.to(socket.game_name).emit("new data", data[socket.game_name].data);
   });
   socket.on("choose color", (color) => {
@@ -297,9 +304,36 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     if (data[socket.game_name] !== undefined) {
       data[socket.game_name].population--;
+      if(data[socket.game_name].songs_playing > 0) {
+        data[socket.game_name].songs_playing--;
+      }
       if (data[socket.game_name].population === 0) {
         game.save(socket.game_name, data[socket.game_name].data);
         delete data[socket.game_name];
+      }
+    }
+  });
+
+  socket.on("add song", (song) => {
+    data[socket.game_name].songs.push(song);
+    console.log("Song received");
+    console.log(data[socket.game_name].songs_playing);
+    if (data[socket.game_name].songs_playing === 0) {
+      io.to(socket.game_name).emit("play song", data[socket.game_name].songs[0]);
+      data[socket.game_name].songs_playing = data[socket.game_name].population;
+      data[socket.game_name].songs.splice(0, 1);
+      console.log("Song sent");
+    }
+  });
+  socket.on("request song", () => {
+    if(data[socket.game_name].songs_playing > 0) {
+      data[socket.game_name].songs_playing--;
+    }
+    if (data[socket.game_name].songs_playing === 0) {
+      if (data[socket.game_name].songs.length !== 0) {
+        io.to(socket.game_name).emit("play song", data[socket.game_name].songs[0]);
+        data[socket.game_name].songs_playing = data[socket.game_name].population;
+        data[socket.game_name].songs.splice(0, 1);
       }
     }
   });

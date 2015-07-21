@@ -1,6 +1,8 @@
 'use strict';
 require("babel/polyfill");
 let io = require('socket.io-client');
+var ss = require('socket.io-stream');
+let fs = require('fs');
 
 const PASTURE = 0,
   FIELD = 1,
@@ -30,6 +32,8 @@ const RESOURCE = 0,
   DEVELOPMENT = 1;
 
 let socket = io();
+window.AudioContext = window.AudioContext || window.webkitAudioContext;
+let audio = new AudioContext();
 let data, game_name, your_name, my_number, overlay, turn;
 
 let adjacent = (i, j, typea, typeb) => {
@@ -269,6 +273,36 @@ let add_message = (msg) => {
   }
 };
 
+let run_audio_upload = (e) => {
+  if(e.keyCode == 192) {
+    if(document.getElementById('file-upload').childNodes.length === 0) {
+      //Upload an audio file
+      let input = document.createElement('input');
+      input.setAttribute('type', 'file');
+      input.accept = "audio/mpeg";
+      input.onchange = () => {
+        let fr = new FileReader();
+        fr.readAsArrayBuffer(input.files[0]);
+        fr.onloadend = () => {
+          socket.emit("add song", fr.result);
+        };
+        input.parentNode.removeChild(input);
+        document.getElementById('file-upload').style.display = "none";
+      };
+      document.getElementById('file-upload').appendChild(input);
+      document.getElementById('file-upload').style.display = "block";
+    } else {
+      document.getElementById('file-upload').removeChild(document.getElementById('file-upload').childNodes[0]);
+      document.getElementById('file-upload').style.display = "none";
+    }
+  }
+};
+
+let open_inputs = (e) => {
+  run_chatbox(e);
+  run_audio_upload(e);
+};
+
 let start_game = () => {
   socket.emit("start game");
   document.getElementById("start_game").style.display = "none";
@@ -281,7 +315,7 @@ let start_game_button = (show) => {
 };
 let start_menu = (show) => {
   document.getElementById("start_form").style.display = (show ? "block" : "none");
-  window.onkeydown = show ? undefined : run_chatbox;
+  window.onkeydown = show ? undefined : open_inputs;
 };
 let init = () => {
   overlay = document.getElementById("request_form");
@@ -291,7 +325,7 @@ let init = () => {
     socket.emit("join game", {
       game: game_name,
       name: your_name
-    });
+    }, (res) => {});
     start_menu(false);
   }
 };
@@ -719,11 +753,27 @@ let part_data = (d) => {
   arrange();
 };
 
+let play_song = (song_buf) => {
+  audio.decodeAudioData(song_buf, (song) => {
+    let source = audio.createBufferSource();
+    source.buffer = song;
+    source.connect(audio.destination);
+    source.start();
+    console.log(song.duration * 1000);
+    window.setTimeout(() => {
+      console.log("requested song");
+      socket.emit("request song");
+    }, song.duration * 1000);
+  });
+};
+
 socket.on("new data", set_data);
 socket.on("part data", part_data);
 socket.on("get color", get_color);
 socket.on("game full", game_full);
 socket.on("new message", add_message);
+
+socket.on("play song", play_song);
 
 let out = {
   init: init,
