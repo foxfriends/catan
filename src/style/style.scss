@@ -21,6 +21,14 @@ div.tile {
   transition: left 0.5s,
               top 0.5s;
 }
+
+img.robber {
+  display: block;
+  margin: 0 auto;
+  margin-top: 64px;
+  opacity: 0;
+}
+
 span.number {
   pointer-events: none;
   display: inline-block;
@@ -154,6 +162,11 @@ div.overlay input[type='file'] {
   padding: 0;
 }
 
+div.overlay input[type='number'] {
+  width: 50px;
+  display: inline-block;
+}
+
 div.overlay button:hover, div.overlay button:focus, div.overlay input:focus {
   background-color: RGBA(255, 255, 255, 1);
 }
@@ -202,7 +215,7 @@ div#chatbox input {
   color: black;
 }
 div#chatbox p:nth-of-type(2n) {
-  background-color: RGBA(255, 255, 255, 0.8);
+  background-color: RGBA(255, 255, 255, 0.3);
 }
 button#start_game {
   display: none;
@@ -224,4 +237,18 @@ div#dice {
   position: fixed;
   left: 32px;
   top: 107px;
+}
+
+div#gui {
+  position: fixed;
+  left: 32px;
+  top: 203px;
+}
+
+div#gui div {
+  display: none;
+  height: 100px;
+  cursor: pointer;
+  background: RGBA(255, 255, 255, 0.5);
+  border: 1px RGBA(0, 0, 0, 0.5);
 }

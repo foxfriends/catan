@@ -1,5 +1,6 @@
 'use strict';
 let fs = require("fs");
+let adjacent = require("./adjacent.es6");
 
 let shuffle = (array) => {
     for(var i = array.length; i > 0; i--) {
@@ -21,7 +22,9 @@ class Game {
     new(name) {
         let tiles = shuffle([0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,4,4,4,5]);
         let numbers = shuffle([2,3,3,4,4,5,5,6,6,8,8,9,9,10,10,11,11,12]);
-        for(var i = 0; i < tiles.length; i++) {
+        let robber = [];
+        let i, j;
+        for(i = 0; i < tiles.length; i++) {
             if(tiles[i] != 5) {
                 tiles[i] = [tiles[i], numbers[0]];
                 numbers.splice(0,1);
@@ -36,6 +39,13 @@ class Game {
             [tiles[12], tiles[13], tiles[14], tiles[15]],
             [tiles[16], tiles[17], tiles[18]]
         ];
+        for(i = 0; i < tiles.length; i++) {
+          for(j = 0; j < tiles[i].length; j++) {
+            if(tiles[i][j][0] == 5) {
+              robber = [i,j];
+            }
+          }
+        }
         let ports = shuffle([0,1,2,3,4,5,5,5,5]);
         let dev_cards = shuffle([0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,2,2,3,3,4,4]);
 
@@ -75,7 +85,9 @@ class Game {
             game_started: false,
             turn: -1,
             setup: 0,
-            dice: [1,1]
+            dice: [1,1],
+            rolled: false,
+            robber: robber
         };
 
         console.log(`New game created: ${name}`);
