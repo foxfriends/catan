@@ -77,3 +77,4 @@ $RECYCLE.BIN/
 # Extra
 public_html/*
 games/*
+.jshintrc

@@ -52,7 +52,6 @@ class Game {
         let data = {
             tiles: tiles,
             ports: ports,
-            dev_cards: dev_cards,
             roads: [
                 [-1,-1,-1,-1,-1,-1],
                 [-1,-1,-1,-1],
@@ -74,17 +73,18 @@ class Game {
                 [[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]],
                 [[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]
             ],
-            hands: [
-                [[0,0,0,0,0],[0,0,0,0,0]],
-                [[0,0,0,0,0],[0,0,0,0,0]],
-                [[0,0,0,0,0],[0,0,0,0,0]],
-                [[0,0,0,0,0],[0,0,0,0,0]]
-            ],
+            dev_cards: dev_cards,
             trade: [0,0,0,0,0],
-            players: [],
-            game_started: false,
+            players: {
+                /*
+                name: {
+                    turn: 0,
+                    hand: [[0,0,0,0,0], [0,0,0,0,0]]
+                }
+                */
+            },
+            gameState: 0,
             turn: -1,
-            setup: 0,
             dice: [1,1],
             rolled: false,
             robber: robber

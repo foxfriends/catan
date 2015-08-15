@@ -1,6 +1,7 @@
 {
     "globalstrict": true,
     "esnext": true,
+    "elision": true,
     "globals": {
         "console": false,
         "require": false,
