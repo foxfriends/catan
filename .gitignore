@@ -73,8 +73,3 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
-# Extra
-public_html/*
-games/*
-.jshintrc
