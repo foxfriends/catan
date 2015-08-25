@@ -12,9 +12,7 @@ export class Catan {
         this[SOCKET] = s;
     }
     awaitData() {
-        console.log('waiting for data');
         this[SOCKET].once('game:data', (data) => {
-            console.log(data);
             arrange(data, this[PLAYER]);
             this[GEN].next(data);
         });
@@ -61,7 +59,7 @@ export class Catan {
             .html("");
     }
 
-    chooseGameForm() {
+    chooseGameFormShow() {
         $('#start_form')
             .css('display', 'block')
             .submit((e) => {
@@ -74,23 +72,28 @@ export class Catan {
             });
     }
     chooseGameFormHide() {
-        $('#start_form').css('display', 'none');
+        $('#start_form')
+            .css('display', 'none')
+            .off('submit');
     }
 
     error(err) {
         alert(err);
     }
 
-    startButton() {
-        $('#start_button')
+    startButtonShow() {
+        $('#start_game')
             .css('display', 'block')
+            .off('click') //Don't add multiple handlers
             .click(() => {
                 this[SOCKET].emit('game:start');
                 this.startButtonHide();
             });
     }
     startButtonHide() {
-        $('#start_button').css('display', 'none');
+        $('#start_game')
+            .css('display', 'none')
+            .off('click');
     }
 
     turn() {

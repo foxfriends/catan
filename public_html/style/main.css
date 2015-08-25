@@ -94,10 +94,10 @@ div.road_row.long div.road:nth-child(2n) {
 div.road_row.long div.road:nth-child(2n+1) {
   transform: rotate(-30deg); }
 
-div.road_row.long div.road:nth-child(2n) {
+div.road_row.long.rev div.road:nth-child(2n) {
   transform: rotate(-30deg); }
 
-div.road_row.long div.road:nth-child(2n+1) {
+div.road_row.long.rev div.road:nth-child(2n+1) {
   transform: rotate(30deg); }
 
 div.road_row.tall div.road {

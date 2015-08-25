@@ -13,13 +13,15 @@ export class Build {
     }
 
     house(i, j, data) {
-        this[SOCKET].emit('build:house', [i, j], this[GEN].next);
+        this[SOCKET].emit('build:house', [i, j], (err, data) => {
+            this[GEN].next([err, data]);
+        });
         data.houses[i][j] = [1, data.players[this[PLAYER]].turn];
         this.houseHide(data);
     }
     houseShow(data) {
         for(let i = 0; i < data.houses.length; i++) {
-            for(let j = 0; j < data.houses.length; j++) {
+            for(let j = 0; j < data.houses[i].length; j++) {
                 //Check if each house should be buildable
                 let house = document.getElementsByClassName('house_row')[i].getElementsByClassName('house')[j];
                 if(data.houses[i][j][0] === 0) { //If the house is not already built
@@ -31,7 +33,7 @@ export class Build {
                     //Check for the adjacent roads
                     let n;
                     for(n = 0; n < adj_road.length; n++) {
-                        if(data.roads[adj_road[n][0]][adj_road[n][1]] == data.players[this[PLAYER]].turn) {
+                        if(data.roads[adj_road[n][0]][adj_road[n][1]] == data.players[this[PLAYER]]) {
                             break;
                         }
                     }
@@ -58,7 +60,7 @@ export class Build {
     }
     houseHide(data) {
         for(let i = 0; i < data.houses.length; i++) {
-            for(let j = 0; j < data.houses.length; j++) {
+            for(let j = 0; j < data.houses[i].length; j++) {
                 //Hide each house that's not built and remove the onclick handler
                 let house = document.getElementsByClassName('house_row')[i].getElementsByClassName('house')[j];
                 if(data.houses[i][j][0] === 0) {
@@ -71,7 +73,9 @@ export class Build {
     }
 
     road(i, j, free, data) {
-        this[SOCKET].emit('build:road', [i, j, free], this[GEN].next());
+        this[SOCKET].emit('build:road', [i, j, free], (err, data) => {
+            this[GEN].next(err, data);
+        });
         data.roads[i][j] = data.players[this[PLAYER]].turn;
         this.roadHide(data);
     }

@@ -7,7 +7,7 @@ let socket = io();
 
 import {CONST} from './const.es6';
 import {Build} from './build.es6';
-import {Robber} from './build.es6';
+import {Robber} from './robber.es6';
 import {Trade} from './trade.es6';
 import {DevCard} from './devcard.es6';
 import {Catan} from './catan.es6';
@@ -18,7 +18,7 @@ let run = (function* () {
     let game, player, data;
     while(!game) {
         //Keep going until accepted into a game
-        [game, player] = yield catan.chooseGameForm();
+        [game, player] = yield catan.chooseGameFormShow();
         let [err, msg] = yield socket.emit('game:join', [game, player], (...params) => run.next(params));
         if(err !== null) {
             //If there was an error, tell the player and reject them
@@ -45,7 +45,7 @@ let run = (function* () {
         //While waiting for more players, keep updating the display
         if(data.players[player].turn === 0 && Object.keys(data.players).length >= 3) {
             //The first player gets a button to start the game once enough players join
-            catan.startButton();
+            catan.startButtonShow();
         }
         data = yield catan.awaitData();
     }
@@ -53,9 +53,9 @@ let run = (function* () {
         //During setup phase, players take turns building
         if(data.turn == data.players[player].turn) {
             let house;
-            [,[data, house]] = yield build.house.show(data);
+            [,[data, house]] = yield build.houseShow(data);
             arrange(data, player);
-            yield build.road.show(data, house);
+            yield build.roadShow(data, house);
             [, data] = yield catan.turn();
             arrange(data, player);
         } else {
@@ -69,10 +69,10 @@ let run = (function* () {
             //On your turn, do a lot
             if(!data.rolled) {
                 if(data.players[player].hand[CONST.DEVELOPMENT][CONST.KNIGHT]) {
-                    if(yield catan.playKnight.show()) {
-                        data = yield robber.move.show(data);
+                    if(yield catan.playKnightShow()) {
+                        data = yield robber.moveShow(data);
                         arrange(data, player);
-                        data = yield robber.steal.show(data);
+                        data = yield robber.stealShow(data);
                         arrange(data, player);
                     }
                 }
@@ -87,7 +87,7 @@ let run = (function* () {
                         let discardCount = Math.floor(cardCount / 2);
                         let toDiscard = discardCount - 0;
                         while(toDiscard) {
-                            discarded.concat(yield robber.discard.show(toDiscard, data));
+                            discarded.concat(yield robber.discardShow(toDiscard, data));
                             toDiscard = discardCount - discarded.length;
                         }
                     }
@@ -97,21 +97,21 @@ let run = (function* () {
                         [data, done] = yield robber.wait();
                     }
                     arrange(data, player);
-                    data = yield robber.move.show(data);
+                    data = yield robber.moveShow(data);
                     arrange(data, player);
-                    yield robber.steal.show(data);
+                    yield robber.stealShow(data);
                     arrange(data, player);
                 }
             }
             //All of these should call nex with an array [data, extra]
-            build.house.show(data);
-            build.road.show(data);
-            build.city.show(data);
-            devcard.buy.show(data);
+            build.houseShow(data);
+            build.roadShow(data);
+            build.cityShow(data);
+            devcard.buyShow(data);
 
-            devcard.play.show(data);
-            trade.button.show(data);
-            catan.turn.show();
+            devcard.playShow(data);
+            trade.buttonShow(data);
+            catan.turnShow();
 
             let extra;
             [data, extra] = yield;
@@ -139,9 +139,9 @@ let run = (function* () {
                     arrange(data, player);
                     break;
                 case 'roadbuilding':
-                    [data] = yield build.road.show(data, true);
+                    [data] = yield build.roadShow(data, true);
                     arrange(data, player);
-                    [data] = yield build.road.show(data, true);
+                    [data] = yield build.roadShow(data, true);
                     arrange(data, player);
                     break;
                 case 'done':
@@ -167,7 +167,7 @@ let run = (function* () {
                             let discardCount = Math.floor(cardCount / 2);
                             let toDiscard = discardCount - 0;
                             while(toDiscard) {
-                                discarded.concat(yield robber.discard.show(discarded, data));
+                                discarded.concat(yield robber.discardShow(discarded, data));
                                 toDiscard = discardCount - discarded.length;
                             }
                         }

@@ -122,7 +122,7 @@ export let arrange = (data, your_name) => {
                 `<img src='image/ore.png' width='20'> ${data.players[name].hand[CONST.RESOURCE][CONST.ORE]}`
             );
         }
-        if(i === data.turn) {
+        if(data.players[name].turn === data.turn) {
             player.css('border', '2px solid white');
         } else {
             player.css('border', 'none');

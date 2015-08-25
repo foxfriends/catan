@@ -107,6 +107,8 @@ div {
             div.road {
                 &:nth-child(2n) { transform: rotate(30deg); }
                 &:nth-child(2n+1) { transform: rotate(-30deg); }
+            }
+            &.rev div.road {
                 &:nth-child(2n) { transform: rotate(-30deg); }
                 &:nth-child(2n+1) { transform: rotate(30deg); }
             }

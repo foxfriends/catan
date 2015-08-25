@@ -1,20 +1,18 @@
 'use strict';
 let express = require('express');
 let app = express();
-
 let server = app.listen(8888, () => {
     console.log('Server started at 8888');
 });
+app.use('', express.static('public_html'));
 
 let io = require('socket.io')(server);
 
 let game = require('./game');
-let data = [];
+let data = {};
 
 let {CONST} = require('./public_html/script/src/const');
 let adjacent = require('./public_html/script/src/adjacent');
-
-app.use('', express.static('public_html'));
 
 io.on('connection', (socket) => {
     let playerName, gameName;
@@ -51,6 +49,14 @@ io.on('connection', (socket) => {
                 res(1, `${gameName} is full. Please choose a different game`);
                 return;
             }
+        } else {
+            if(!data[gameName].players[playerName].connected) {
+                data[gameName].players[playerName].connected = true;
+            } else {
+                socket.leave(gameName);
+                res(1, `${playerName} is already connected. Please do not join twice`);
+                return;
+            }
         }
         socket.broadcast.to(gameName).emit('game:data', data[gameName]);
         res(null, data[gameName]);
@@ -63,15 +69,16 @@ io.on('connection', (socket) => {
         if(colors.indexOf(color) == -1) {
             data[gameName].players[playerName].color = color;
         }
+        socket.broadcast.to(gameName).emit('game:data', data[gameName]);
         res(null, data[gameName]);
     });
     socket.on('game:start', () => {
         if(data[gameName].gameState == CONST.OPEN) {
-            data[socket.gmae].gameState = CONST.SETUP;
+            data[gameName].gameState = CONST.SETUP;
         }
         let turns = Object.keys(data[gameName].players).length == 4 ? [0, 1, 2, 3] : [0, 1, 2];
-        data[gameName].players.map((player) => {
-            player.turn = turns.splice((Math.random() * 10) % turns.length, 1);
+        Object.keys(data[gameName].players).forEach((player) => {
+            data[gameName].players[player].turn = turns.splice((Math.random() * 10) % turns.length, 1)[0];
         });
         data[gameName].turn = 0;
         io.to(gameName).emit('game:data', data[gameName]);
@@ -95,7 +102,7 @@ io.on('connection', (socket) => {
     //Building events
     socket.on('build:house', ([i, j], res) => {
         data[gameName].houses[i][j][0] = 1;
-        data[gameName].houses[i][j][1] = data[gameName].players[playerName].turn;
+        data[gameName].houses[i][j][1] = playerName;
         if(data[gameName].gameState != CONST.SETUP) {
             data[gameName].players[playerName].hand[CONST.RESOURCE][CONST.WOOL] -= 1;
             data[gameName].players[playerName].hand[CONST.RESOURCE][CONST.WOOD] -= 1;
@@ -103,10 +110,10 @@ io.on('connection', (socket) => {
             data[gameName].players[playerName].hand[CONST.RESOURCE][CONST.BRICK] -= 1;
         }
         io.to(gameName).emit('game:data', data[gameName]);
-        res(null, [[data[gameName], [i, j]]]);
+        res(null, [data[gameName], [i, j]]);
     });
     socket.on('build:road', ([i, j, free], res) => {
-        data[gameName].roads[i][j] = data[gameName].players[playerName].turn;
+        data[gameName].roads[i][j] = playerName;
         if(!free) {
             data[gameName].players[playerName].hand[CONST.RESOURCE][CONST.WOOD] -= 1;
             data[gameName].players[playerName].hand[CONST.RESOURCE][CONST.BRICK] -= 1;
@@ -153,11 +160,16 @@ io.on('connection', (socket) => {
     //  ------------------
     socket.on('disconnect', () => {
         if(data[gameName] !== undefined) {
-            data[gameName].population--;
-            if(data[gameName].songs_playing > 0) {
-                data[gameName].songs_playing--;
-            }
-            if(data[gameName].population === 0) {
+            //Disconnect the player
+            data[gameName].players[playerName].connected = false;
+            //Remove the game from the memory if all players are gone
+            let online = false;
+            Object.keys(data[gameName].players).forEach((player) => {
+                if(data[gameName].players[player].connected) {
+                    online = true;
+                }
+            });
+            if(!online) {
                 game.save(gameName, data[gameName]);
                 delete data[gameName];
             }
