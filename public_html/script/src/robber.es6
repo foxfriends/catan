@@ -35,7 +35,7 @@ export class Robber {
     moveShow(data) {
         for(let i = 0; i < data.tiles.length; i++) {
             for(let j = 0; j < data.tiles[i].length; j++) {
-                if(data.robber[0] != i || data.robber[1] != j) {
+                if(data.robber[0] !== i || data.robber[1] !== j) {
                     let rob = document.getElementsByClassName('tile_row')[i].getElementsByClassName('tile')[j].getElementsByClassName('robber')[0];
                     rob.style.opacity = 0.5;
                     rob.style.cursor = 'pointer';
@@ -50,7 +50,7 @@ export class Robber {
         for(let i = 0; i < data.tiles.length; i++) {
             for(let j = 0; j < data.tiles[i].length; j++) {
                 let rob = document.getElementsByClassName('tile_row')[i].getElementsByClassName('tile')[j].getElementsByClassName('robber')[0];
-                if(data.robber[0] != i || data.robber[1] != j) {
+                if(data.robber[0] !== i || data.robber[1] !== j) {
                     rob.style.opacity = 0;
                 } else {
                     rob.style.opacity = 1;
@@ -67,10 +67,10 @@ export class Robber {
     stealShow(data) {
         let adj = adjacent(data.robber[0], data.robber[1], 'tile', 'house');
         adj.forEach((target) => {
-            if(data.houses[target[0]][target[1]][0] !== 0 && data.houses[target[0]][target[1]][1] != data.players[this[PLAYER]].turn) {
+            if(data.houses[target[0]][target[1]][0] !== 0 && data.houses[target[0]][target[1]][1] !== data.players[this[PLAYER]].turn) {
                 let p;
                 for(p in data.players) {
-                    if(data.players[p].turn == data.houses[target[0]][target[1]][1]) {
+                    if(data.players[p].turn === data.houses[target[0]][target[1]][1]) {
                         break;
                     }
                 }

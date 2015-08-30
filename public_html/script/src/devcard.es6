@@ -8,5 +8,10 @@ export class DevCard {
         this[SOCKET] = s;
         this[PLAYER] = p;
     }
+    buyShow() {
 
+    }
+    playShow() {
+        
+    }
 }

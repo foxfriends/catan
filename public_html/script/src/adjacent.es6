@@ -32,7 +32,7 @@ let tiles = [
 export let adjacent = (i, j, typea, typeb) => {
     let adj = {
         tile: {
-            road: ((a, b) => {
+            road: (a, b) => {
                 let x = [
                     [
                         [a * 2, b * 2],
@@ -59,9 +59,9 @@ export let adjacent = (i, j, typea, typeb) => {
                         [a * 2 + 2, b * 2 + 1]
                     ]
                 ];
-                return x[Math.floor(a / 2)];
-            }),
-            house: ((a, b) => {
+                return x[Math.max(0, Math.min(a - 1, 2))];
+            },
+            house: (a, b) => {
                 let x = [
                     [
                         [a, b * 2],
@@ -89,10 +89,36 @@ export let adjacent = (i, j, typea, typeb) => {
                     ]
                 ];
                 return x[Math.max(0, Math.min(a - 1, 2))];
-            })
+            },
+            tile: (a, b) => {
+                let x = [
+                    [
+                        [a - 1, b - 1], [a - 1, b],
+                        [a, b - 1], [a, b + 1],
+                        [a + 1, b], [a + 1, b + 1]
+                    ],
+                    [
+                        [a - 1, b - 1], [a - 1, b],
+                        [a, b - 1], [a, b + 1],
+                        [a + 1, b - 1], [a + 1, b]
+                    ],
+                    [
+                        [a - 1, b], [a - 1, b + 1],
+                        [a, b - 1], [a, b + 1],
+                        [a + 1, b - 1], [a + 1, b]
+                    ]
+                ];
+                let set = x[Math.max(0, Math.min(a - 1, 2))];
+                for(let y = set.length - 1; y >= 0; y--) {
+                    if(set[y][0] >= tiles.length || set[y][0] < 0 || set[y][1] < 0 || set[y][1] >= tiles[set[y][0]].length) {
+                        set.splice(y, 1);
+                    }
+                }
+                return set;
+            }
         },
         road: {
-            road: ((a, b) => {
+            road: (a, b) => {
                 let x, y, set;
                 if(a % 2) {
                     x = [
@@ -145,8 +171,8 @@ export let adjacent = (i, j, typea, typeb) => {
                     }
                     return set;
                 }
-            }),
-            house: ((a, b) => {
+            },
+            house: (a, b) => {
                 if(a % 2) {
                     let x = [
                         [
@@ -169,10 +195,10 @@ export let adjacent = (i, j, typea, typeb) => {
                         [a, b + 1]
                     ];
                 }
-            })
+            }
         },
         house: {
-            road: ((a, b) => {
+            road: (a, b) => {
                 let x = [
                     [
                         [a * 2, b - 1],
@@ -194,8 +220,8 @@ export let adjacent = (i, j, typea, typeb) => {
                     }
                 }
                 return set;
-            }),
-            house: ((a, b) => {
+            },
+            house: (a, b) => {
                 let x = [
                     [
                         [a, b - 1],
@@ -227,8 +253,8 @@ export let adjacent = (i, j, typea, typeb) => {
                     }
                 }
                 return set;
-            }),
-            tile: ((a, b) => {
+            },
+            tile: (a, b) => {
                 let x = [
                     [
                         [
@@ -262,7 +288,7 @@ export let adjacent = (i, j, typea, typeb) => {
                     }
                 }
                 return set;
-            })
+            }
         }
     };
     return adj[typea][typeb](i, j);

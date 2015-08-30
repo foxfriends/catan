@@ -27,7 +27,7 @@ export class Catan {
     chooseColorShow(data) {
         let colors = ['red', 'orange', 'blue', 'white'];
         Object.keys(data.players).forEach((player) => {
-            if(colors.indexOf(data.players[player].color) != -1) {
+            if(colors.indexOf(data.players[player].color) !== -1) {
                 //Remove all already chosen colours
                 colors.splice(colors.indexOf(data.players[player].color), 1);
             }
@@ -105,5 +105,13 @@ export class Catan {
         this[SOCKET].emit('game:turn', null, (err, res) => {
             this[GEN].next([err, res]);
         });
+    }
+    turnEndShow() {
+        $('#end-turn')
+            .css('display', 'block')
+            .off('click')
+            .click(() => {
+                this[GEN].next([null, [null, 'done']]);
+            });
     }
 }

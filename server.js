@@ -29,6 +29,9 @@ io.on('connection', (socket) => {
             data[gameName] = {};
             if(game.exists(gameName)) {
                 data[gameName] = game.load(gameName);
+                for(let player in data[gameName].players) {
+                    data[gameName].players[player].connected = false;
+                }
             } else {
                 data[gameName] = game.new(gameName);
             }
@@ -216,58 +219,58 @@ io.on('connection', (socket) => {
     });
 
     //  ------------------
-
-    socket.on('add song', (song) => {
-        data[gameName].songs.push(song);
-        console.log('Song received');
-        if(data[gameName].songs_playing === 0) {
-            io.to(gameName).emit('play song', data[gameName].songs[0]);
-            data[gameName].songs_playing = data[gameName].population;
-            data[gameName].songs.splice(0, 1);
-            console.log('Song sent');
-        }
-    });
-    socket.on('request song', () => {
-        if(data[gameName].songs_playing > 0) {
-            data[gameName].songs_playing--;
-        }
-        if(data[gameName].songs_playing === 0) {
-            if(data[gameName].songs.length !== 0) {
-                console.log('Song sent');
-                io.to(gameName).emit('play song', data[gameName].songs[0]);
-                data[gameName].songs_playing = data[gameName].population;
-                data[gameName].songs.splice(0, 1);
-            }
-        }
-    });
-
-    socket.on('robber-clear', (d) => {
-        if(d && d.discards) {
-            for(let i = 0; i < 5; i++) {
-                data[gameName].hands[d.n][0][i] -= d.discards[i];
-            }
-        }
-        io.to(gameName).emit('new data');
-        data[gameName].robber_clear++;
-        if(data[gameName].robber_clear == data[gameName].players.length) {
-            io.to(gameName).emit('robber-choose');
-        }
-    });
-    socket.on('robber-move', (d) => {
-        data[gameName].robber = d;
-        socket.broadcast.to(gameName).emit('new data', data[gameName]);
-    });
-    socket.on('robber-steal', ({
-        d, n
-    }) => {
-        let x = Math.floor(Math.random() * 1000) % data[gameName].hands[d].reduce((p, c) => p + c, 0);
-        let r = 0;
-        while(x >= data[gameName].hands[d][r]) {
-            x -= data[gameName].hands[d][r];
-            r++;
-        }
-        data[gameName].hands[d][r]--;
-        data[gameName].hands[n][r]++;
-        socket.broadcast.to(gameName).emit('new data', data[gameName]);
-    });
+    //
+    // socket.on('add song', (song) => {
+    //     data[gameName].songs.push(song);
+    //     console.log('Song received');
+    //     if(data[gameName].songs_playing === 0) {
+    //         io.to(gameName).emit('play song', data[gameName].songs[0]);
+    //         data[gameName].songs_playing = data[gameName].population;
+    //         data[gameName].songs.splice(0, 1);
+    //         console.log('Song sent');
+    //     }
+    // });
+    // socket.on('request song', () => {
+    //     if(data[gameName].songs_playing > 0) {
+    //         data[gameName].songs_playing--;
+    //     }
+    //     if(data[gameName].songs_playing === 0) {
+    //         if(data[gameName].songs.length !== 0) {
+    //             console.log('Song sent');
+    //             io.to(gameName).emit('play song', data[gameName].songs[0]);
+    //             data[gameName].songs_playing = data[gameName].population;
+    //             data[gameName].songs.splice(0, 1);
+    //         }
+    //     }
+    // });
+    //
+    // socket.on('robber-clear', (d) => {
+    //     if(d && d.discards) {
+    //         for(let i = 0; i < 5; i++) {
+    //             data[gameName].hands[d.n][0][i] -= d.discards[i];
+    //         }
+    //     }
+    //     io.to(gameName).emit('new data');
+    //     data[gameName].robber_clear++;
+    //     if(data[gameName].robber_clear == data[gameName].players.length) {
+    //         io.to(gameName).emit('robber-choose');
+    //     }
+    // });
+    // socket.on('robber-move', (d) => {
+    //     data[gameName].robber = d;
+    //     socket.broadcast.to(gameName).emit('new data', data[gameName]);
+    // });
+    // socket.on('robber-steal', ({
+    //     d, n
+    // }) => {
+    //     let x = Math.floor(Math.random() * 1000) % data[gameName].hands[d].reduce((p, c) => p + c, 0);
+    //     let r = 0;
+    //     while(x >= data[gameName].hands[d][r]) {
+    //         x -= data[gameName].hands[d][r];
+    //         r++;
+    //     }
+    //     data[gameName].hands[d][r]--;
+    //     data[gameName].hands[n][r]++;
+    //     socket.broadcast.to(gameName).emit('new data', data[gameName]);
+    // });
 });

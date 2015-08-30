@@ -13,15 +13,15 @@ export let arrange = (data, your_name) => {
                     )
                 .attr('class', `tile ${['pasture','field','forest','quarry','mountain','desert','water'][data.tiles[i][j][0]]}`)
                 .html('')
-                .append(data.tiles[i][j][1] == 7 ? '' : $('<span></span>')
-                    .addClass(`number ${[6,8].indexOf(data.tiles[i][j][1]) != -1 ? 'red' : ''}`)
+                .append(data.tiles[i][j][1] === 7 ? '' : $('<span></span>')
+                    .addClass(`number ${[6,8].indexOf(data.tiles[i][j][1]) !== -1 ? 'red' : ''}`)
                     .text(data.tiles[i][j][1])
                 )
                 .append($('<img>')
                     .attr('src', '/image/robber.png')
                     .addClass('robber')
                     .css({
-                        opacity: (data.robber[0] == i && data.robber[1] == j) ? 1 : 0,
+                        opacity: (data.robber[0] === i && data.robber[1] === j) ? 1 : 0,
                         cursor: 'default'
                     })
                     .off('click')
@@ -90,7 +90,7 @@ export let arrange = (data, your_name) => {
     let n = 0;
     Object.keys(data.players).forEach((name) => {
         let player;
-        if(name != your_name) {
+        if(name !== your_name) {
             player = $(`.player`).eq(n++);
             player.children('.cards').html(
                 `<img src='image/wool.png' width='20'>` +

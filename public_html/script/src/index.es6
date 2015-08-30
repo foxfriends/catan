@@ -13,6 +13,23 @@ import {DevCard} from './devcard.es6';
 import {Catan} from './catan.es6';
 import {arrange} from './arrange.es6';
 
+let robberGen = function*(data, player, robber) {
+    let cardCount = data.players[player].hand[CONST.RESOURCE].reduce((p, c) => p + c, 0);
+    let discarded = [];
+    if(cardCount >= 8) {
+        let discardCount = Math.floor(cardCount / 2);
+        let toDiscard = discardCount - 0;
+        while(toDiscard) {
+            discarded.concat(yield robber.discardShow(toDiscard, data));
+            toDiscard = discardCount - discarded.length;
+        }
+    }
+    let done;
+    [data, done] = yield robber.discard(discarded);
+    arrange(data, player);
+    return [data, done];
+};
+
 let run = (function* () {
     let catan = new Catan(run, socket);
     let game, player, data;
@@ -41,7 +58,7 @@ let run = (function* () {
     let trade = new Trade(run, socket, player);
     let devcard = new DevCard(run, socket, player);
 
-    while(data.gameState == CONST.OPEN) {
+    while(data.gameState === CONST.OPEN) {
         //While waiting for more players, keep updating the display
         if(data.players[player].turn === 0 && Object.keys(data.players).length >= 3) {
             //The first player gets a button to start the game once enough players join
@@ -49,9 +66,9 @@ let run = (function* () {
         }
         data = yield catan.awaitData();
     }
-    while(data.gameState == CONST.SETUP) {
+    while(data.gameState === CONST.SETUP) {
         //During setup phase, players take turns building
-        if(data.turn == data.players[player].turn) {
+        if(data.turn === data.players[player].turn) {
             let house;
             [, [data, house]] = yield build.houseShow(data);
             arrange(data, player);
@@ -63,43 +80,34 @@ let run = (function* () {
             data = yield catan.awaitData();
         }
     }
-    while(data.gameState == CONST.PLAY) {
-        console.log(data);
+    while(data.gameState === CONST.PLAY) {
         //Playing phase
-        if(data.turn == data.players[player].turn) {
+        if(data.turn === data.players[player].turn) {
             //On your turn, do a lot
-            if(data.players[player].hand[CONST.DEVELOPMENT][CONST.KNIGHT]) {
-                if(yield catan.playKnightShow()) {
-                    data = yield robber.moveShow(data);
-                    arrange(data, player);
-                    data = yield robber.stealShow(data);
-                    arrange(data, player);
-                }
-            }
-            [,data] = yield catan.roll();
-            if(data.dice[0] + data.dice[1] == 7) {
-                data = yield robber.start();
-                let done = false;
-                let cardCount = data.players[player].hand[CONST.RESOURCE].reduce((p, c) => p + c, 0);
-                let discarded = [];
-                if(cardCount >= 8) {
-                    let discardCount = Math.floor(cardCount / 2);
-                    let toDiscard = discardCount - 0;
-                    while(toDiscard) {
-                        discarded.concat(yield robber.discardShow(toDiscard, data));
-                        toDiscard = discardCount - discarded.length;
+            if(!data.rolled) {
+                if(data.players[player].hand[CONST.DEVELOPMENT][CONST.KNIGHT]) {
+                    if(yield catan.playKnightShow()) {
+                        data = yield robber.moveShow(data);
+                        arrange(data, player);
+                        data = yield robber.stealShow(data);
+                        arrange(data, player);
                     }
                 }
-                [data, done] = yield robber.discard(discarded);
+                [,data] = yield catan.roll();
                 arrange(data, player);
-                while(!done) {
-                    [data, done] = yield robber.wait();
+                if(data.dice[0] + data.dice[1] === 7) {
+                    data = yield robber.start();
+                    let done = false;
+                    [data, done] = yield* robberGen(data, player, robber);
+                    while(!done) {
+                        [data, done] = yield robber.wait();
+                    }
+                    arrange(data, player);
+                    data = yield robber.moveShow(data);
+                    arrange(data, player);
+                    yield robber.stealShow(data);
+                    arrange(data, player);
                 }
-                arrange(data, player);
-                data = yield robber.moveShow(data);
-                arrange(data, player);
-                yield robber.stealShow(data);
-                arrange(data, player);
             }
             //All of these should call nex with an array [data, extra]
             build.houseShow(data);
@@ -109,10 +117,14 @@ let run = (function* () {
 
             devcard.playShow(data);
             trade.buttonShow(data);
-            catan.turnShow();
+            catan.turnEndShow();
 
-            let extra;
-            [, [data, extra]] = yield;
+            let d, extra;
+            [, [d, extra]] = yield;
+            if(d !== null) {
+                data = d;
+            }
+            arrange(data, player);
             switch(extra) {
                 case 'trade':
                     yield trade.offer();
@@ -137,13 +149,13 @@ let run = (function* () {
                     arrange(data, player);
                     break;
                 case 'roadbuilding':
-                    [data] = yield build.roadShow(data, true);
+                    [,[data]] = yield build.roadShow(data, true);
                     arrange(data, player);
-                    [data] = yield build.roadShow(data, true);
+                    [,[data]] = yield build.roadShow(data, true);
                     arrange(data, player);
                     break;
                 case 'done':
-                    data = yield catan.turn();
+                    [, data] = yield catan.turn();
                     break;
             }
         } else {
@@ -151,26 +163,15 @@ let run = (function* () {
             if(data.rolled) {
                 data = yield catan.awaitData();
                 //If the dice have been rolled, wait for trades for input
-                if(data.trade != []) {
+                if(!data.trade) {
                     trade.respond(yield trade.counter());
                 }
             } else {
                 data = yield catan.awaitData();
                 //If dice haven't been rolled, wait for robbers for input
                 if(data.players[player].response.robber === false) {
-                    if(data.dice[0] + data.dice[1] == 7) {
-                        let cardCount = data.players[player].hand[CONST.RESOURCE].reduce((p, c) => p + c, 0);
-                        let discarded = [];
-                        if(cardCount >= 8) {
-                            let discardCount = Math.floor(cardCount / 2);
-                            let toDiscard = discardCount - 0;
-                            while(toDiscard) {
-                                discarded.concat(yield robber.discardShow(discarded, data));
-                                toDiscard = discardCount - discarded.length;
-                            }
-                        }
-                        [data] = yield robber.discard(discarded);
-                        arrange(data, player);
+                    if(data.dice[0] + data.dice[1] === 7) {
+                        [data] = yield* robberGen(data, player, robber);
                     }
                 }
             }

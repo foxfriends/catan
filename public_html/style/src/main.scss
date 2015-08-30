@@ -2,6 +2,9 @@
 
 $tileWidth: 200px;
 $tileHeight: 231px;
+$numberCircleSize: 40px;
+$numberCircleColor: #AE985A;
+$playerBoxHeight: 75px;
 
 @mixin transition($transitions...) {
     -webkit-transition: $transitions;
@@ -10,12 +13,17 @@ $tileHeight: 231px;
     -o-transition: $transitions;
     transition: $transitions;
 }
+@mixin border-radius($radius) {
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+    border-radius: $radius;
+}
 
 * {
     padding: 0;
     margin: 0;
     overflow: visible;
-    font-family: "Lato";
+    font-family: "Lato",sans-serif;
 }
 
 body {
@@ -39,8 +47,8 @@ img.robber {
 span.number {
     display: inline-block;
 
-    width: 40px;
-    height: 40px;
+    width: $numberCircleSize;
+    height: $numberCircleSize;
 
     margin: 0 auto;
     margin-top: 8px;
@@ -49,12 +57,13 @@ span.number {
     font-family: "Lato";
     font-weight: 700;
     font-size: 30px;
+    line-height: $numberCircleSize;
 
-    border: 1px #AE985A outset;
+    border: 1px $numberCircleColor outset;
     border-radius: 100%;
 
     color: #555555;
-    background-color: #AE985A;
+    background-color: $numberCircleColor;
 
     pointer-events: none;
 
@@ -133,7 +142,7 @@ div {
 
     &.player {
         position: fixed;
-        height: 75px;
+        height: $playerBoxHeight;
         width: 30%;
         background-color: RGBA(255, 255, 255, 0.5);
 
@@ -241,25 +250,56 @@ div {
 
     &#dice {
         position: fixed;
-        left: 32px;
+        left: 14px;
         top: 107px;
+        width: 160px;
+        text-align: center;
     }
 
     &#gui {
         position: fixed;
-        left: 32px;
+        left: 14px;
         top: 203px;
 
-        div {
-            display: none;
+        div.container {
+            position: relative;
+            overflow: visible;
+            width: 160px;
 
-            height: 100px;
+            div {
+                display: none;
 
-            border: 1px RGBA(0, 0, 0, 0.5);
+                position: absolute;
+                left: 0;
 
-            background: RGBA(255, 255, 255, 0.5);
+                width: 100%;
+                height: 40px;
 
-            cursor: pointer;
+                padding: 0 5px;
+
+                border: 1px RGBA(0, 0, 0, 0.5) solid;
+                @include border-radius(4px);
+
+                background: RGBA(255, 255, 255, 0.5);
+
+                line-height: 40px;
+                text-align: center;
+                cursor: pointer;
+
+
+                &#buy-dev-card {
+                    top: 0px;
+                }
+                &#play-dev-card {
+                    top: 50px;
+                }
+                &#init-trade {
+                    top: 100px;
+                }
+                &#end-turn {
+                    top: 150px;
+                }
+            }
         }
     }
 }

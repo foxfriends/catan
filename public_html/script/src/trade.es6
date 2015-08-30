@@ -8,5 +8,7 @@ export class Trade {
         this[SOCKET] = s;
         this[PLAYER] = p;
     }
-    
+    buttonShow() {
+
+    }
 }
