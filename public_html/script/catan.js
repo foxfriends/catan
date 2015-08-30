@@ -69,12 +69,12 @@
 	var _arrangeEs6 = __webpack_require__(60);
 
 	__webpack_require__(62);
-	__webpack_require__(156);
+	__webpack_require__(160);
 
 	var socket = (0, _socketIoClient2['default'])();
 
 	var run = regeneratorRuntime.mark(function callee$0$0() {
-	    var catan, game, player, data, _ref, _ref2, _ref3, _ref32, err, msg, build, robber, trade, devcard, house, _ref4, _ref42, _ref42$1, _ref5, _ref52, done, cardCount, discarded, discardCount, toDiscard, _ref6, _ref62, _ref7, _ref72, extra, _ref8, _ref82, responses, which, _ref9, _ref92, _ref10, _ref102, _ref11, _ref112;
+	    var catan, game, player, data, _ref, _ref2, _ref3, _ref32, err, msg, build, robber, trade, devcard, house, _ref4, _ref42, _ref42$1, _ref5, _ref52, _ref6, _ref62, done, cardCount, discarded, discardCount, toDiscard, _ref7, _ref72, _ref8, _ref82, extra, _ref9, _ref92, _ref92$1, responses, which, _ref10, _ref102, _ref11, _ref112, _ref12, _ref122;
 
 	    return regeneratorRuntime.wrap(function callee$0$0$(context$1$0) {
 	        while (1) switch (context$1$0.prev = context$1$0.next) {
@@ -224,17 +224,15 @@
 
 	            case 67:
 	                if (!(data.gameState == _constEs6.CONST.PLAY)) {
-	                    context$1$0.next = 238;
+	                    context$1$0.next = 240;
 	                    break;
 	                }
+
+	                console.log(data);
+	                //Playing phase
 
 	                if (!(data.turn == data.players[player].turn)) {
-	                    context$1$0.next = 199;
-	                    break;
-	                }
-
-	                if (data.rolled) {
-	                    context$1$0.next = 129;
+	                    context$1$0.next = 201;
 	                    break;
 	                }
 
@@ -268,22 +266,23 @@
 	                (0, _arrangeEs6.arrange)(data, player);
 
 	            case 82:
-	                catan.roll();
-	                context$1$0.next = 85;
-	                return catan.awaitData();
+	                context$1$0.next = 84;
+	                return catan.roll();
 
-	            case 85:
-	                data = context$1$0.sent;
+	            case 84:
+	                _ref6 = context$1$0.sent;
+	                _ref62 = _slicedToArray(_ref6, 2);
+	                data = _ref62[1];
 
 	                if (!(data.dice[0] + data.dice[1] == 7)) {
-	                    context$1$0.next = 129;
+	                    context$1$0.next = 130;
 	                    break;
 	                }
 
-	                context$1$0.next = 89;
+	                context$1$0.next = 90;
 	                return robber.start();
 
-	            case 89:
+	            case 90:
 	                data = context$1$0.sent;
 	                done = false;
 	                cardCount = data.players[player].hand[_constEs6.CONST.RESOURCE].reduce(function (p, c) {
@@ -292,76 +291,76 @@
 	                discarded = [];
 
 	                if (!(cardCount >= 8)) {
-	                    context$1$0.next = 105;
+	                    context$1$0.next = 106;
 	                    break;
 	                }
 
 	                discardCount = Math.floor(cardCount / 2);
 	                toDiscard = discardCount - 0;
 
-	            case 96:
+	            case 97:
 	                if (!toDiscard) {
-	                    context$1$0.next = 105;
+	                    context$1$0.next = 106;
 	                    break;
 	                }
 
 	                context$1$0.t0 = discarded;
-	                context$1$0.next = 100;
+	                context$1$0.next = 101;
 	                return robber.discardShow(toDiscard, data);
 
-	            case 100:
+	            case 101:
 	                context$1$0.t1 = context$1$0.sent;
 	                context$1$0.t0.concat.call(context$1$0.t0, context$1$0.t1);
 
 	                toDiscard = discardCount - discarded.length;
-	                context$1$0.next = 96;
+	                context$1$0.next = 97;
 	                break;
 
-	            case 105:
-	                context$1$0.next = 107;
+	            case 106:
+	                context$1$0.next = 108;
 	                return robber.discard(discarded);
 
-	            case 107:
-	                _ref6 = context$1$0.sent;
-	                _ref62 = _slicedToArray(_ref6, 2);
-	                data = _ref62[0];
-	                done = _ref62[1];
-
-	                (0, _arrangeEs6.arrange)(data, player);
-
-	            case 112:
-	                if (done) {
-	                    context$1$0.next = 121;
-	                    break;
-	                }
-
-	                context$1$0.next = 115;
-	                return robber.wait();
-
-	            case 115:
+	            case 108:
 	                _ref7 = context$1$0.sent;
 	                _ref72 = _slicedToArray(_ref7, 2);
 	                data = _ref72[0];
 	                done = _ref72[1];
-	                context$1$0.next = 112;
+
+	                (0, _arrangeEs6.arrange)(data, player);
+
+	            case 113:
+	                if (done) {
+	                    context$1$0.next = 122;
+	                    break;
+	                }
+
+	                context$1$0.next = 116;
+	                return robber.wait();
+
+	            case 116:
+	                _ref8 = context$1$0.sent;
+	                _ref82 = _slicedToArray(_ref8, 2);
+	                data = _ref82[0];
+	                done = _ref82[1];
+	                context$1$0.next = 113;
 	                break;
 
-	            case 121:
+	            case 122:
 	                (0, _arrangeEs6.arrange)(data, player);
-	                context$1$0.next = 124;
+	                context$1$0.next = 125;
 	                return robber.moveShow(data);
 
-	            case 124:
+	            case 125:
 	                data = context$1$0.sent;
 
 	                (0, _arrangeEs6.arrange)(data, player);
-	                context$1$0.next = 128;
+	                context$1$0.next = 129;
 	                return robber.stealShow(data);
 
-	            case 128:
+	            case 129:
 	                (0, _arrangeEs6.arrange)(data, player);
 
-	            case 129:
+	            case 130:
 	                //All of these should call nex with an array [data, extra]
 	                build.houseShow(data);
 	                build.roadShow(data);
@@ -373,168 +372,169 @@
 	                catan.turnShow();
 
 	                extra = undefined;
-	                context$1$0.next = 139;
+	                context$1$0.next = 140;
 	                return;
 
-	            case 139:
-	                _ref8 = context$1$0.sent;
-	                _ref82 = _slicedToArray(_ref8, 2);
-	                data = _ref82[0];
-	                extra = _ref82[1];
+	            case 140:
+	                _ref9 = context$1$0.sent;
+	                _ref92 = _slicedToArray(_ref9, 2);
+	                _ref92$1 = _slicedToArray(_ref92[1], 2);
+	                data = _ref92$1[0];
+	                extra = _ref92$1[1];
 	                context$1$0.t2 = extra;
-	                context$1$0.next = context$1$0.t2 === 'trade' ? 146 : context$1$0.t2 === 'yearofplenty' ? 170 : context$1$0.t2 === 'monopoly' ? 175 : context$1$0.t2 === 'roadbuilding' ? 180 : context$1$0.t2 === 'done' ? 193 : 197;
+	                context$1$0.next = context$1$0.t2 === 'trade' ? 148 : context$1$0.t2 === 'yearofplenty' ? 172 : context$1$0.t2 === 'monopoly' ? 177 : context$1$0.t2 === 'roadbuilding' ? 182 : context$1$0.t2 === 'done' ? 195 : 199;
 	                break;
 
-	            case 146:
-	                context$1$0.next = 148;
+	            case 148:
+	                context$1$0.next = 150;
 	                return trade.offer();
 
-	            case 148:
+	            case 150:
 	                responses = [];
 
-	            case 149:
+	            case 151:
 	                if (!(responses.length < Object.keys(data.players).length - 1)) {
-	                    context$1$0.next = 157;
+	                    context$1$0.next = 159;
 	                    break;
 	                }
 
 	                context$1$0.t3 = responses;
-	                context$1$0.next = 153;
+	                context$1$0.next = 155;
 	                return trade.awaitResponses();
 
-	            case 153:
+	            case 155:
 	                context$1$0.t4 = context$1$0.sent;
 	                context$1$0.t3.push.call(context$1$0.t3, context$1$0.t4);
-	                context$1$0.next = 149;
+	                context$1$0.next = 151;
 	                break;
 
-	            case 157:
-	                context$1$0.next = 159;
+	            case 159:
+	                context$1$0.next = 161;
 	                return trade.displayOffers(responses);
 
-	            case 159:
+	            case 161:
 	                which = context$1$0.sent;
 
 	                if (!(which === false)) {
-	                    context$1$0.next = 165;
+	                    context$1$0.next = 167;
 	                    break;
 	                }
 
-	                context$1$0.next = 163;
+	                context$1$0.next = 165;
 	                return trade.reject();
 
-	            case 163:
-	                context$1$0.next = 169;
+	            case 165:
+	                context$1$0.next = 171;
 	                break;
 
-	            case 165:
-	                context$1$0.next = 167;
+	            case 167:
+	                context$1$0.next = 169;
 	                return trade.accept([responses, which]);
 
-	            case 167:
+	            case 169:
 	                data = context$1$0.sent;
 
 	                (0, _arrangeEs6.arrange)(data, player);
 
-	            case 169:
-	                return context$1$0.abrupt('break', 197);
-
-	            case 170:
-	                context$1$0.next = 172;
-	                return devcard.yearOfPlenty();
+	            case 171:
+	                return context$1$0.abrupt('break', 199);
 
 	            case 172:
+	                context$1$0.next = 174;
+	                return devcard.yearOfPlenty();
+
+	            case 174:
 	                data = context$1$0.sent;
 
 	                (0, _arrangeEs6.arrange)(data, player);
-	                return context$1$0.abrupt('break', 197);
-
-	            case 175:
-	                context$1$0.next = 177;
-	                return devcard.monopoly();
+	                return context$1$0.abrupt('break', 199);
 
 	            case 177:
+	                context$1$0.next = 179;
+	                return devcard.monopoly();
+
+	            case 179:
 	                data = context$1$0.sent;
 
 	                (0, _arrangeEs6.arrange)(data, player);
-	                return context$1$0.abrupt('break', 197);
-
-	            case 180:
-	                context$1$0.next = 182;
-	                return build.roadShow(data, true);
+	                return context$1$0.abrupt('break', 199);
 
 	            case 182:
-	                _ref9 = context$1$0.sent;
-	                _ref92 = _slicedToArray(_ref9, 1);
-	                data = _ref92[0];
-
-	                (0, _arrangeEs6.arrange)(data, player);
-	                context$1$0.next = 188;
+	                context$1$0.next = 184;
 	                return build.roadShow(data, true);
 
-	            case 188:
+	            case 184:
 	                _ref10 = context$1$0.sent;
 	                _ref102 = _slicedToArray(_ref10, 1);
 	                data = _ref102[0];
 
 	                (0, _arrangeEs6.arrange)(data, player);
-	                return context$1$0.abrupt('break', 197);
+	                context$1$0.next = 190;
+	                return build.roadShow(data, true);
 
-	            case 193:
-	                context$1$0.next = 195;
-	                return catan.turn();
+	            case 190:
+	                _ref11 = context$1$0.sent;
+	                _ref112 = _slicedToArray(_ref11, 1);
+	                data = _ref112[0];
+
+	                (0, _arrangeEs6.arrange)(data, player);
+	                return context$1$0.abrupt('break', 199);
 
 	            case 195:
-	                data = context$1$0.sent;
-	                return context$1$0.abrupt('break', 197);
+	                context$1$0.next = 197;
+	                return catan.turn();
 
 	            case 197:
-	                context$1$0.next = 236;
-	                break;
+	                data = context$1$0.sent;
+	                return context$1$0.abrupt('break', 199);
 
 	            case 199:
+	                context$1$0.next = 238;
+	                break;
+
+	            case 201:
 	                if (!data.rolled) {
+	                    context$1$0.next = 213;
+	                    break;
+	                }
+
+	                context$1$0.next = 204;
+	                return catan.awaitData();
+
+	            case 204:
+	                data = context$1$0.sent;
+
+	                if (!(data.trade != [])) {
 	                    context$1$0.next = 211;
 	                    break;
 	                }
 
-	                context$1$0.next = 202;
-	                return catan.awaitData();
-
-	            case 202:
-	                data = context$1$0.sent;
-
-	                if (!(data.trade != [])) {
-	                    context$1$0.next = 209;
-	                    break;
-	                }
-
 	                context$1$0.t5 = trade;
-	                context$1$0.next = 207;
+	                context$1$0.next = 209;
 	                return trade.counter();
 
-	            case 207:
+	            case 209:
 	                context$1$0.t6 = context$1$0.sent;
 	                context$1$0.t5.respond.call(context$1$0.t5, context$1$0.t6);
 
-	            case 209:
-	                context$1$0.next = 236;
+	            case 211:
+	                context$1$0.next = 238;
 	                break;
 
-	            case 211:
-	                context$1$0.next = 213;
+	            case 213:
+	                context$1$0.next = 215;
 	                return catan.awaitData();
 
-	            case 213:
+	            case 215:
 	                data = context$1$0.sent;
 
 	                if (!(data.players[player].response.robber === false)) {
-	                    context$1$0.next = 236;
+	                    context$1$0.next = 238;
 	                    break;
 	                }
 
 	                if (!(data.dice[0] + data.dice[1] == 7)) {
-	                    context$1$0.next = 236;
+	                    context$1$0.next = 238;
 	                    break;
 	                }
 
@@ -544,47 +544,47 @@
 	                discarded = [];
 
 	                if (!(cardCount >= 8)) {
-	                    context$1$0.next = 230;
+	                    context$1$0.next = 232;
 	                    break;
 	                }
 
 	                discardCount = Math.floor(cardCount / 2);
 	                toDiscard = discardCount - 0;
 
-	            case 221:
+	            case 223:
 	                if (!toDiscard) {
-	                    context$1$0.next = 230;
+	                    context$1$0.next = 232;
 	                    break;
 	                }
 
 	                context$1$0.t7 = discarded;
-	                context$1$0.next = 225;
+	                context$1$0.next = 227;
 	                return robber.discardShow(discarded, data);
 
-	            case 225:
+	            case 227:
 	                context$1$0.t8 = context$1$0.sent;
 	                context$1$0.t7.concat.call(context$1$0.t7, context$1$0.t8);
 
 	                toDiscard = discardCount - discarded.length;
-	                context$1$0.next = 221;
+	                context$1$0.next = 223;
 	                break;
 
-	            case 230:
-	                context$1$0.next = 232;
+	            case 232:
+	                context$1$0.next = 234;
 	                return robber.discard(discarded);
 
-	            case 232:
-	                _ref11 = context$1$0.sent;
-	                _ref112 = _slicedToArray(_ref11, 1);
-	                data = _ref112[0];
+	            case 234:
+	                _ref12 = context$1$0.sent;
+	                _ref122 = _slicedToArray(_ref12, 1);
+	                data = _ref122[0];
 
 	                (0, _arrangeEs6.arrange)(data, player);
 
-	            case 236:
+	            case 238:
 	                context$1$0.next = 67;
 	                break;
 
-	            case 238:
+	            case 240:
 	            case 'end':
 	                return context$1$0.stop();
 	        }
@@ -601,8 +601,6 @@
 	//During setup phase, players take turns building
 
 	//Other players wait, while updating the view
-
-	//Playing phase
 
 	//On your turn, do a lot
 
@@ -7903,8 +7901,8 @@
 	        value: function house(i, j, data) {
 	            var _this = this;
 
-	            this[SOCKET].emit('build:house', [i, j], function (err, data) {
-	                _this[GEN].next([err, data]);
+	            this[SOCKET].emit('build:house', [i, j], function (err, res) {
+	                _this[GEN].next([err, res]);
 	            });
 	            data.houses[i][j] = [1, data.players[this[PLAYER]].turn];
 	            this.houseHide(data);
@@ -7983,8 +7981,8 @@
 	        value: function road(i, j, free, data) {
 	            var _this3 = this;
 
-	            this[SOCKET].emit('build:road', [i, j, free], function (err, data) {
-	                _this3[GEN].next(err, data);
+	            this[SOCKET].emit('build:road', [i, j, free], function (err, res) {
+	                _this3[GEN].next([err, res]);
 	            });
 	            data.roads[i][j] = data.players[this[PLAYER]].turn;
 	            this.roadHide(data);
@@ -8102,25 +8100,29 @@
 	    }, {
 	        key: 'city',
 	        value: function city(i, j, data) {
-	            this[SOCKET].emit('build:city', [i, j], this[GEN].next);
+	            var _this5 = this;
+
+	            this[SOCKET].emit('build:city', [i, j], function (err, res) {
+	                _this5[GEN].next([err, res]);
+	            });
 	            data.houses[i][j][0] = 2;
 	            this.cityHide(data);
 	        }
 	    }, {
 	        key: 'cityShow',
 	        value: function cityShow(data) {
-	            var _this5 = this;
+	            var _this6 = this;
 
 	            if (data.players[this[PLAYER]].hand[_constEs6.CONST.RESOURCE][_constEs6.CONST.ORE] >= 2 && data.players[this[PLAYER]].hand[_constEs6.CONST.RESOURCE][_constEs6.CONST.WHEAT] >= 3) {
 	                var _loop6 = function (i) {
 	                    var _loop7 = function (j) {
 	                        var house = document.getElementsByClassName("house_row")[i].getElementsByClassName("house")[j];
-	                        if (data.houses[i][j][0] == 1 && data.houses[i][j][1] == data.players[_this5[PLAYER]].turn) {
-	                            house.style.backgroundColor = data.players[_this5[PLAYER]].color;
+	                        if (data.houses[i][j][0] == 1 && data.houses[i][j][1] == data.players[_this6[PLAYER]].turn) {
+	                            house.style.backgroundColor = data.players[_this6[PLAYER]].color;
 	                            house.style.opacity = 0.5;
 	                            house.style.cursor = "pointer";
 	                            house.onclick = function () {
-	                                _this5.city(i, j, data);
+	                                _this6.city(i, j, data);
 	                            };
 	                        }
 	                    };
@@ -8161,12 +8163,15 @@
 /***/ function(module, exports) {
 
 	'use strict';
+
 	Object.defineProperty(exports, '__esModule', {
 	    value: true
 	});
+	var roads = [[-1, -1, -1, -1, -1, -1], [-1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1], [-1, -1, -1, -1, -1, -1]];
+	var houses = [[[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]];
+	var tiles = [[[0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0]]];
+
 	var adjacent = function adjacent(i, j, typea, typeb) {
-	    var roads = [[-1, -1, -1, -1, -1, -1], [-1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1], [-1, -1, -1, -1, -1, -1]];
-	    var houses = [[[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]];
 	    var adj = {
 	        tile: {
 	            road: function road(a, b) {
@@ -8234,8 +8239,14 @@
 	                return set;
 	            },
 	            tile: function tile(a, b) {
-	                var x = [[[a - 1, b / 2 - 1], [a, b / 2 - 1], [a, b / 2]], [[a - 1, (b - 1) / 2 - 1], [a - 1, (b - 1) / 2], [a, (b - 1) / 2]]];
-	                return x[a % 2];
+	                var x = [[[[a - 1, b / 2 - 1], [a, b / 2 - 1], [a, b / 2]], [[a - 1, Math.floor(b / 2) - 1], [a - 1, Math.floor(b / 2)], [a, Math.floor(b / 2)]]], [[[a - 1, b / 2 - 1], [a - 1, b / 2], [a, b / 2 - 1]], [[a - 1, Math.floor(b / 2)], [a, Math.floor(b / 2) - 1], [a, Math.floor(b / 2)]]]];
+	                var set = x[a % 2][b % 2];
+	                for (var y = set.length - 1; y >= 0; y--) {
+	                    if (set[y][0] >= tiles.length || set[y][0] < 0 || set[y][1] < 0 || set[y][1] >= tiles[set[y][0]].length) {
+	                        set.splice(y, 1);
+	                    }
+	                }
+	                return set;
 	            }
 	        }
 	    };
@@ -8583,12 +8594,21 @@
 	            (0, _jquery2['default'])('#start_game').css('display', 'none').off('click');
 	        }
 	    }, {
-	        key: 'turn',
-	        value: function turn() {
+	        key: 'roll',
+	        value: function roll() {
 	            var _this6 = this;
 
-	            this[SOCKET].emit('game:turn', function (err, res) {
-	                _this6[GEN].next();
+	            this[SOCKET].emit('game:roll', null, function (err, res) {
+	                _this6[GEN].next([err, res]);
+	            });
+	        }
+	    }, {
+	        key: 'turn',
+	        value: function turn() {
+	            var _this7 = this;
+
+	            this[SOCKET].emit('game:turn', null, function (err, res) {
+	                _this7[GEN].next([err, res]);
 	            });
 	        }
 	    }]);
@@ -8620,91 +8640,52 @@
 	        j = undefined;
 	    for (i = 0; i < data.tiles.length; i++) {
 	        for (j = 0; j < data.tiles[i].length; j++) {
-	            var tile = document.getElementsByClassName('tile_row')[i].getElementsByClassName('tile')[j];
-	            tile.style.left = 200 + (200 * j + 100 * Math.abs(i - 2)) + 'px';
-	            tile.style.top = 174 * i + 'px';
-	            var type = '';
-	            switch (data.tiles[i][j][0]) {
-	                case _constEs6.CONST.PASTURE:
-	                    type = 'pasture';
-	                    break;
-	                case _constEs6.CONST.FIELD:
-	                    type = 'field';
-	                    break;
-	                case _constEs6.CONST.FOREST:
-	                    type = 'forest';
-	                    break;
-	                case _constEs6.CONST.QUARRY:
-	                    type = 'quarry';
-	                    break;
-	                case _constEs6.CONST.MOUNTAIN:
-	                    type = 'mountain';
-	                    break;
-	                case _constEs6.CONST.DESERT:
-	                    type = 'desert';
-	                    break;
-	                case _constEs6.CONST.WATER:
-	                    type = 'water';
-	                    break;
-	            }
-	            tile.className = 'tile ' + type;
-	            var show = 'no';
-	            if (i == data.robber[0] && j == data.robber[1]) {
-	                show = 'yes';
-	            }
-	            var number = '';
-	            var robber_img = '<img src="/image/robber.png" class="robber">';
-	            if (data.tiles[i][j][1] !== 7) {
-	                var red = '';
-	                if (data.tiles[i][j][1] === 6 || data.tiles[i][j][1] === 8) {
-	                    red = ' red';
-	                }
-	                number = '<span class=\'number ' + red + '\'>' + data.tiles[i][j][1] + '</span>';
-	            }
-	            tile.innerHTML = '' + number + robber_img;
-	            tile.getElementsByClassName('robber')[0].style.opacity = data.robber[0] == i && data.robber[1] == j ? 1 : 0;
-	            tile.getElementsByClassName('robber')[0].onclick = undefined;
-	            tile.getElementsByClassName('robber')[0].style.cursor = 'default';
+	            (0, _jquery2['default'])('.tile_row').eq(i).children('.tile').eq(j).css({
+	                left: 200 + (200 * j + 100 * Math.abs(i - 2)) + 'px',
+	                top: 174 * i + 'px' }).attr('class', 'tile ' + ['pasture', 'field', 'forest', 'quarry', 'mountain', 'desert', 'water'][data.tiles[i][j][0]]).html('').append(data.tiles[i][j][1] == 7 ? '' : (0, _jquery2['default'])('<span></span>').addClass('number ' + ([6, 8].indexOf(data.tiles[i][j][1]) != -1 ? 'red' : '')).text(data.tiles[i][j][1])).append((0, _jquery2['default'])('<img>').attr('src', '/image/robber.png').addClass('robber').css({
+	                opacity: data.robber[0] == i && data.robber[1] == j ? 1 : 0,
+	                cursor: 'default'
+	            }).off('click'));
 	        }
 	    }
 	    for (i = 0; i < data.roads.length; i++) {
 	        for (j = 0; j < data.roads[i].length; j++) {
 	            var road = document.getElementsByClassName('road_row')[i].getElementsByClassName('road')[j];
-	            if (i & 1) {
-	                road.style.left = 150 + (200 * j + 100 * Math.abs((i - 1) / 2 - 2)) + 'px';
-	                road.style.top = 174 * (i - 1) / 2 + 231 / 2 + 'px';
-	            } else {
-	                road.style.left = 150 + (100 * j + 100 * Math.abs((i - 1) / 2 - 2)) + 'px';
-	                road.style.top = 174 * i / 2 + 231 / 12 + 'px';
-	            }
-	            if (data.roads[i][j] !== -1) {
-	                road.style.backgroundColor = data.players[data.roads[i][j]].color;
-	                road.style.opacity = 1;
-	            } else {
-	                road.style.opacity = 0;
-	            }
-	            road.style.cursor = 'default';
-	            road.onclick = undefined;
+	            (0, _jquery2['default'])('.road_row').eq(i).children('.road').eq(j).css(
+	            //Position
+	            i & 1 ? {
+	                left: 150 + (200 * j + 100 * Math.abs((i - 1) / 2 - 2)) + 'px',
+	                top: 174 * (i - 1) / 2 + 231 / 2 + 'px'
+	            } : {
+	                left: 150 + (100 * j + 100 * Math.abs((i - 1) / 2 - 2)) + 'px',
+	                top: 174 * i / 2 + 231 / 12 + 'px'
+	            }).css(
+	            //Color
+	            data.roads[i][j] !== -1 ? {
+	                'background-color': data.players[data.roads[i][j]].color,
+	                opacity: 1
+	            } : {
+	                opacity: 0
+	            }).css('cursor', 'default').off('click');
 	        }
 	    }
 	    for (i = 0; i < data.houses.length; i++) {
 	        for (j = 0; j < data.houses[i].length; j++) {
-	            var house = document.getElementsByClassName('house_row')[i].getElementsByClassName('house')[j];
-	            house.style.left = 100 + 100 * j + 100 * Math.abs(i - 3) - 16 + 100 * (i >= 3) + 'px';
-	            if (i < 3) {
-	                house.style.top = 174 * i + (231 / 6 + 16) * ((j + 1) % 2) - 16 + 'px';
-	            } else {
-	                house.style.top = 174 * i + (231 / 6 + 16) * (j % 2) - 16 + 'px';
-	            }
-	            if (data.houses[i][j][0] !== 0) {
-	                house.style.backgroundColor = data.players[data.houses[i][j][1]].color;
-	                house.style.opacity = 1;
-	            } else {
-	                house.style.opacity = 0;
-	            }
-	            house.style.cursor = 'default';
-	            house.style.border = 'none';
-	            house.onclick = undefined;
+	            (0, _jquery2['default'])('.house_row').eq(i).children('.house').eq(j).css({
+	                //Position
+	                left: 100 + 100 * j + 100 * Math.abs(i - 3) - 16 + 100 * (i >= 3) + 'px',
+	                top: i < 3 ? 174 * i + (231 / 6 + 16) * ((j + 1) % 2) - 16 + 'px' : 174 * i + (231 / 6 + 16) * (j % 2) - 16 + 'px'
+	            }).css(
+	            //Color
+	            data.houses[i][j][0] !== 0 ? {
+	                'background-color': data.players[data.houses[i][j][1]].color,
+	                opacity: 1
+	            } : {
+	                opacity: 0
+	            }).css({
+	                cursor: 'default',
+	                border: 'none'
+	            }).off('click');
 	        }
 	    }
 	    var colors = {
@@ -8717,7 +8698,7 @@
 	    Object.keys(data.players).forEach(function (name) {
 	        var player = undefined;
 	        if (name != your_name) {
-	            player = (0, _jquery2['default'])('.player:eq(' + n++ + ')');
+	            player = (0, _jquery2['default'])('.player').eq(n++);
 	            player.children('.cards').html('<img src=\'image/wool.png\' width=\'20\'>' + '<img src=\'image/wheat.png\' width=\'20\'>' + '<img src=\'image/wood.png\' width=\'20\'>' + '<img src=\'image/brick.png\' width=\'20\'>' + '<img src=\'image/ore.png\' width=\'20\'>' + data.players[name].hand[_constEs6.CONST.RESOURCE].reduce(function (x, y) {
 	                return x + y;
 	            }, 0));
@@ -8725,23 +8706,16 @@
 	            player = (0, _jquery2['default'])('.player.me');
 	            player.children('.cards').html('<img src=\'image/wool.png\' width=\'20\'> ' + data.players[name].hand[_constEs6.CONST.RESOURCE][_constEs6.CONST.WOOL] + ('<img src=\'image/wheat.png\' width=\'20\'> ' + data.players[name].hand[_constEs6.CONST.RESOURCE][_constEs6.CONST.WHEAT]) + ('<img src=\'image/wood.png\' width=\'20\'> ' + data.players[name].hand[_constEs6.CONST.RESOURCE][_constEs6.CONST.WOOD]) + ('<img src=\'image/brick.png\' width=\'20\'> ' + data.players[name].hand[_constEs6.CONST.RESOURCE][_constEs6.CONST.BRICK]) + ('<img src=\'image/ore.png\' width=\'20\'> ' + data.players[name].hand[_constEs6.CONST.RESOURCE][_constEs6.CONST.ORE]));
 	        }
-	        if (data.players[name].turn === data.turn) {
-	            player.css('border', '2px solid white');
-	        } else {
-	            player.css('border', 'none');
-	        }
-	        player.children('.name').text(name);
-	        player.css('background-color', colors[data.players[name].color]);
-
-	        (0, _jquery2['default'])('#buy-dev-card').css('display', 'none');
-	        (0, _jquery2['default'])('#play-dev-card').css('display', 'none');
-	        (0, _jquery2['default'])('#init-trade').css('display', 'none');
-	        (0, _jquery2['default'])('#end-turn').css('display', 'none');
+	        player.css({
+	            border: data.players[name].turn === data.turn ? '2px solid white' : 'none',
+	            'background-color': colors[data.players[name].color]
+	        }).children('.name').text(name);
+	        (0, _jquery2['default'])('#buy-dev-card,#play-dev-card,#init-trade,#end-turn').css('display', 'none');
 	        // Points
 	        // Prizes
 	    });
-	    document.getElementById('yellowdie').src = '/image/ydie' + data.dice[0] + '.png';
-	    document.getElementById('reddie').src = '/image/rdie' + data.dice[1] + '.png';
+	    (0, _jquery2['default'])('#yellowdie').attr('src', '/image/ydie' + data.dice[0] + '.png');
+	    (0, _jquery2['default'])('#reddie').attr('src', '/image/rdie' + data.dice[1] + '.png');
 	};
 	exports.arrange = arrange;
 
@@ -22068,7 +22042,11 @@
 
 
 /***/ },
-/* 156 */
+/* 156 */,
+/* 157 */,
+/* 158 */,
+/* 159 */,
+/* 160 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin

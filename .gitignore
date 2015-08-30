@@ -73,3 +73,8 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+.jshintrc
+/games/
+/public_html/script/catan.js
+/public_html/style/main.css

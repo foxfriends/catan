@@ -13,8 +13,8 @@ export class Build {
     }
 
     house(i, j, data) {
-        this[SOCKET].emit('build:house', [i, j], (err, data) => {
-            this[GEN].next([err, data]);
+        this[SOCKET].emit('build:house', [i, j], (err, res) => {
+            this[GEN].next([err, res]);
         });
         data.houses[i][j] = [1, data.players[this[PLAYER]].turn];
         this.houseHide(data);
@@ -73,8 +73,8 @@ export class Build {
     }
 
     road(i, j, free, data) {
-        this[SOCKET].emit('build:road', [i, j, free], (err, data) => {
-            this[GEN].next(err, data);
+        this[SOCKET].emit('build:road', [i, j, free], (err, res) => {
+            this[GEN].next([err, res]);
         });
         data.roads[i][j] = data.players[this[PLAYER]].turn;
         this.roadHide(data);
@@ -144,7 +144,9 @@ export class Build {
     }
 
     city(i, j, data) {
-        this[SOCKET].emit('build:city', [i, j], this[GEN].next);
+        this[SOCKET].emit('build:city', [i, j], (err, res) => {
+            this[GEN].next([err, res]);
+        });
         data.houses[i][j][0] = 2;
         this.cityHide(data);
     }

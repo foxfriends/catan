@@ -1,6 +1,6 @@
 'use strict';
 require('babel/polyfill');
-require('../../style/main.scss');
+require('../../style/src/main.scss');
 
 import {default as io} from 'socket.io-client';
 let socket = io();
@@ -53,7 +53,7 @@ let run = (function* () {
         //During setup phase, players take turns building
         if(data.turn == data.players[player].turn) {
             let house;
-            [,[data, house]] = yield build.houseShow(data);
+            [, [data, house]] = yield build.houseShow(data);
             arrange(data, player);
             yield build.roadShow(data, house);
             [, data] = yield catan.turn();
@@ -64,44 +64,42 @@ let run = (function* () {
         }
     }
     while(data.gameState == CONST.PLAY) {
+        console.log(data);
         //Playing phase
         if(data.turn == data.players[player].turn) {
             //On your turn, do a lot
-            if(!data.rolled) {
-                if(data.players[player].hand[CONST.DEVELOPMENT][CONST.KNIGHT]) {
-                    if(yield catan.playKnightShow()) {
-                        data = yield robber.moveShow(data);
-                        arrange(data, player);
-                        data = yield robber.stealShow(data);
-                        arrange(data, player);
-                    }
-                }
-                catan.roll();
-                data = yield catan.awaitData();
-                if(data.dice[0] + data.dice[1] == 7) {
-                    data = yield robber.start();
-                    let done = false;
-                    let cardCount = data.players[player].hand[CONST.RESOURCE].reduce((p, c) => p + c, 0);
-                    let discarded = [];
-                    if(cardCount >= 8) {
-                        let discardCount = Math.floor(cardCount / 2);
-                        let toDiscard = discardCount - 0;
-                        while(toDiscard) {
-                            discarded.concat(yield robber.discardShow(toDiscard, data));
-                            toDiscard = discardCount - discarded.length;
-                        }
-                    }
-                    [data, done] = yield robber.discard(discarded);
-                    arrange(data, player);
-                    while(!done) {
-                        [data, done] = yield robber.wait();
-                    }
-                    arrange(data, player);
+            if(data.players[player].hand[CONST.DEVELOPMENT][CONST.KNIGHT]) {
+                if(yield catan.playKnightShow()) {
                     data = yield robber.moveShow(data);
                     arrange(data, player);
-                    yield robber.stealShow(data);
+                    data = yield robber.stealShow(data);
                     arrange(data, player);
                 }
+            }
+            [,data] = yield catan.roll();
+            if(data.dice[0] + data.dice[1] == 7) {
+                data = yield robber.start();
+                let done = false;
+                let cardCount = data.players[player].hand[CONST.RESOURCE].reduce((p, c) => p + c, 0);
+                let discarded = [];
+                if(cardCount >= 8) {
+                    let discardCount = Math.floor(cardCount / 2);
+                    let toDiscard = discardCount - 0;
+                    while(toDiscard) {
+                        discarded.concat(yield robber.discardShow(toDiscard, data));
+                        toDiscard = discardCount - discarded.length;
+                    }
+                }
+                [data, done] = yield robber.discard(discarded);
+                arrange(data, player);
+                while(!done) {
+                    [data, done] = yield robber.wait();
+                }
+                arrange(data, player);
+                data = yield robber.moveShow(data);
+                arrange(data, player);
+                yield robber.stealShow(data);
+                arrange(data, player);
             }
             //All of these should call nex with an array [data, extra]
             build.houseShow(data);
@@ -114,7 +112,7 @@ let run = (function* () {
             catan.turnShow();
 
             let extra;
-            [data, extra] = yield;
+            [, [data, extra]] = yield;
             switch(extra) {
                 case 'trade':
                     yield trade.offer();

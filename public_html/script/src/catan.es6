@@ -96,9 +96,14 @@ export class Catan {
             .off('click');
     }
 
+    roll() {
+        this[SOCKET].emit('game:roll', null, (err, res) => {
+            this[GEN].next([err, res]);
+        });
+    }
     turn() {
-        this[SOCKET].emit('game:turn', (err, res) => {
-            this[GEN].next();
+        this[SOCKET].emit('game:turn', null, (err, res) => {
+            this[GEN].next([err, res]);
         });
     }
 }
