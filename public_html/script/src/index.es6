@@ -13,19 +13,16 @@ import {DevCard} from './devcard.es6';
 import {Catan} from './catan.es6';
 import {arrange} from './arrange.es6';
 
-let robberGen = function*(data, player, robber) {
+let robberDiscarding = function*(data, player, robber) {
     let cardCount = data.players[player].hand[CONST.RESOURCE].reduce((p, c) => p + c, 0);
     let discarded = [];
     if(cardCount >= 8) {
-        let discardCount = Math.floor(cardCount / 2);
-        let toDiscard = discardCount - 0;
-        while(toDiscard) {
-            discarded.concat(yield robber.discardShow(toDiscard, data));
-            toDiscard = discardCount - discarded.length;
+        while(discarded.length < Math.floor(cardCount / 2)) {
+            discarded = yield robber.discardShow(discarded, data);
         }
     }
     let done;
-    [data, done] = yield robber.discard(discarded);
+    [, [data, done]] = yield robber.discard(discarded);
     arrange(data, player);
     return [data, done];
 };
@@ -87,27 +84,33 @@ let run = (function* () {
             if(!data.rolled) {
                 if(data.players[player].hand[CONST.DEVELOPMENT][CONST.KNIGHT]) {
                     if(yield catan.playKnightShow()) {
-                        data = yield robber.moveShow(data);
+                        [, data] = yield robber.moveShow(data);
                         arrange(data, player);
-                        data = yield robber.stealShow(data);
+                        [, data] = yield robber.stealShow(data);
                         arrange(data, player);
                     }
                 }
                 [,data] = yield catan.roll();
                 arrange(data, player);
-                if(data.dice[0] + data.dice[1] === 7) {
-                    data = yield robber.start();
-                    let done = false;
-                    [data, done] = yield* robberGen(data, player, robber);
-                    while(!done) {
-                        [data, done] = yield robber.wait();
-                    }
-                    arrange(data, player);
-                    data = yield robber.moveShow(data);
-                    arrange(data, player);
-                    yield robber.stealShow(data);
+            }
+            if(data.dice[0] + data.dice[1] === 7) {
+                if(data.players[player].response.robber === null) {
+                    [, data] = yield robber.start();
+                }
+                arrange(data, player);
+                let done = false;
+                if(data.players[player].response.robber === false) {
+                    [data, done] = yield* robberDiscarding(data, player, robber);
                     arrange(data, player);
                 }
+                while(!done) {
+                    [data, done] = yield robber.wait();
+                    arrange(data, player);
+                }
+                [, data] = yield robber.moveShow(data);
+                arrange(data, player);
+                [, data] = yield robber.stealShow(data);
+                arrange(data, player);
             }
             //All of these should call nex with an array [data, extra]
             build.houseShow(data);
@@ -159,22 +162,16 @@ let run = (function* () {
                     break;
             }
         } else {
-            //When not your turn, just wait for news
-            if(data.rolled) {
-                data = yield catan.awaitData();
-                //If the dice have been rolled, wait for trades for input
-                if(!data.trade) {
-                    trade.respond(yield trade.counter());
-                }
-            } else {
-                data = yield catan.awaitData();
-                //If dice haven't been rolled, wait for robbers for input
-                if(data.players[player].response.robber === false) {
-                    if(data.dice[0] + data.dice[1] === 7) {
-                        [data] = yield* robberGen(data, player, robber);
-                    }
-                }
+            //Wait until input is needed for robbers or trades
+            arrange(data, player);
+            if(data.players[player].response.robber === false) {
+                [data] = yield* robberDiscarding(data, player, robber);
+                arrange(data, player);
             }
+            if(data.trade === false) {
+                trade.respond(yield trade.counter());
+            }
+            data = yield catan.awaitData();
         }
     }
 })();

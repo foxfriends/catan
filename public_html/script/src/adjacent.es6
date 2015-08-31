@@ -141,7 +141,7 @@ export let adjacent = (i, j, typea, typeb) => {
                             [a + 1, b * 2]
                         ]
                     ];
-                    set = x[1 - (a < 5) + (a > 5)];
+                    set = x[1 - ((a < 5)?1:0) + ((a > 5)?1:0)];
                     for(y = set.length - 1; y >= 0; y--) {
                         if(set[y][0] >= roads.length || set[y][0] < 0 || set[y][1] < 0 || set[y][1] >= roads[set[y][0]].length) {
                             set.splice(y, 1);
@@ -159,7 +159,7 @@ export let adjacent = (i, j, typea, typeb) => {
                         [
                             [a, b - 1],
                             [a, b + 1],
-                            [a + 1, Math.ceil(b / 2)],
+                            [a - 1, Math.ceil(b / 2)],
                             [a + 1, Math.floor(b / 2)]
                         ]
                     ];
@@ -281,7 +281,7 @@ export let adjacent = (i, j, typea, typeb) => {
                         ]
                     ]
                 ];
-                let set = x[a % 2][b % 2];
+                let set = x[a <= 2 ? 0 : 1][b % 2];
                 for(let y = set.length - 1; y >= 0; y--) {
                     if(set[y][0] >= tiles.length || set[y][0] < 0 || set[y][1] < 0 || set[y][1] >= tiles[set[y][0]].length) {
                         set.splice(y, 1);

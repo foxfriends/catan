@@ -50,6 +50,7 @@ export class Build {
                         if(n === adj_house.length) {
                             $('.house_row').eq(i).children('.house').eq(j)
                                 .css({
+                                    'pointer-events': 'auto',
                                     'background-color': 'black',
                                     opacity: 0.5,
                                     cursor: 'pointer'
@@ -106,6 +107,7 @@ export class Build {
                     if(data.roads[i][j] === -1) {
                         $('.road_row').eq(i).children('.road').eq(j)
                             .css({
+                                'pointer-events': 'auto',
                                 'background-color': 'black',
                                 opacity: 0.5,
                                 cursor: 'pointer'
@@ -131,6 +133,7 @@ export class Build {
                             if(n !== roads.length) {
                                 $('.road_row').eq(i).children('.road').eq(j)
                                     .css({
+                                        'pointer-events': 'auto',
                                         'background-color': 'black',
                                         opacity: 0.5,
                                         cursor: 'pointer'
@@ -147,7 +150,6 @@ export class Build {
         }
     }
     roadHide(data) {
-        console.log(data);
         for(let i = 0; i < data.roads.length; i++) {
             for(let j = 0; j < data.roads[j].length; j++) {
                 //Hide each road that's not built and remove the onclick handler
@@ -176,6 +178,7 @@ export class Build {
                     if(data.houses[i][j][0] === 1 && data.houses[i][j][1] === this[PLAYER]) {
                         $(".house_row").eq(i).children(".house").eq(j)
                             .css({
+                                'pointer-events': 'auto',
                                 'background-color': data.players[this[PLAYER]].color,
                                 opacity: 0.5,
                                 cursor: 'pointer',
@@ -195,7 +198,8 @@ export class Build {
                 $(".house_row").eq(i).children(".house").eq(j)
                     .off('click')
                     .css({
-                        opacity: data.houses[i][j][0] !== -1,
+                        opacity: data.houses[i][j][0] === 0 ? 0 : 1,
+                        border: 'none',
                         cursor: 'default'
                     });
             }

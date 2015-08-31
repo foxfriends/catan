@@ -6,14 +6,6 @@
         "console": false,
         "require": false,
         "module": false,
-        "document": false,
-        "window": false,
-        "FileReader": false,
-        "Event": false,
-        "alert": false,
-        "Buffer": false,
-        "AudioContext": false,
-        "ArrayBuffer": false,
-        "UInt8Array": false
+        "window": false
     }
 }

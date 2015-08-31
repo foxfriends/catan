@@ -51,13 +51,16 @@ export let arrange = (data, your_name) => {
                         opacity: 0
                     }
                 )
-                .css('cursor', 'default')
+                .css({
+                    'pointer-events': 'none',
+                    cursor: 'default'
+                })
                 .off('click');
         }
     }
     for(i = 0; i < data.houses.length; i++) {
         for(j = 0; j < data.houses[i].length; j++) {
-            $('.house_row').eq(i).children('.house').eq(j)
+            let house = $('.house_row').eq(i).children('.house').eq(j)
                 .css({
                     //Position
                     left: `${(100 + 100 * j + 100 * Math.abs(i - 3) - 16 + 100 * (i >= 3))}px`,
@@ -69,16 +72,23 @@ export let arrange = (data, your_name) => {
                     //Color
                     data.houses[i][j][0] !== 0 ? {
                         'background-color': data.players[data.houses[i][j][1]].color,
+                        color: data.players[data.houses[i][j][1]].color,
                         opacity: 1
                     } : {
                         opacity: 0
                     }
                 )
                 .css({
+                    'pointer-events': 'none',
                     cursor: 'default',
                     border: 'none'
                 })
                 .off('click');
+            if(data.houses[i][j][0] === 2) {
+                house.addClass('city');
+            } else {
+                house.removeClass('city');
+            }
         }
     }
     let colors = {

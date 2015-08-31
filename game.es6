@@ -106,7 +106,10 @@ class Game {
                     turn: 0,
                     hand: [[0,0,0,0,0], [0,0,0,0,0]],
                     color: 'red'|'orange'|'blue'|'white',
-                    response: null
+                    response: {
+                        robber: null,
+                        trade: null
+                    }
                 }
                 */
             },
@@ -115,11 +118,7 @@ class Game {
             turnCount: 0,
             dice: [1, 1],
             rolled: false,
-            robber: robber,
-            response: {
-                robber: null,
-                trade: null
-            }
+            robber: robber
         };
 
         console.log(`New game created: ${name}`);

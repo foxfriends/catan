@@ -2,6 +2,8 @@
 
 $tileWidth: 200px;
 $tileHeight: 231px;
+$robberWidth: 40px;
+$robberHeight: 90px;
 $numberCircleSize: 40px;
 $numberCircleColor: #AE985A;
 $playerBoxHeight: 75px;
@@ -36,12 +38,13 @@ body {
 }
 
 img.robber {
+    position: absolute;
     display: block;
 
-    margin: 0 auto;
-    margin-top: 64px;
+    left: ($tileWidth - $robberWidth) / 2;
+    top: ($tileHeight - $robberHeight) / 2;
 
-    opacity: 0;
+    opacity: 1;
 }
 
 span.number {
@@ -78,6 +81,16 @@ div {
     &.blue { background-color: blue; }
     &.white { background-color: white; }
 
+    &.pasture, &.sheep { background-image: url("/image/wool.png"); }
+    &.field, &.wheat { background-image: url("/image/wheat.png"); }
+    &.forest, &.wood { background-image: url("/image/wood.png"); }
+    &.quarry, &.brick{ background-image: url("/image/brick.png"); }
+    &.mountain, &.ore { background-image: url("/image/ore.png"); }
+    &.water { background-image: url("/image/water.png"); }
+    &.desert { background-image: url("/image/desert.png"); }
+}
+
+div {
     &.tile {
         position: absolute;
         left: 100%;
@@ -88,16 +101,23 @@ div {
         text-align: center;
 
         @include transition(left 0.5s, top 0.5s);
-
-        &.pasture { background-image: url("/image/wool.png"); }
-        &.field { background-image: url("/image/wheat.png"); }
-        &.forest { background-image: url("/image/wood.png"); }
-        &.quarry { background-image: url("/image/brick.png"); }
-        &.mountain { background-image: url("/image/ore.png"); }
-        &.water { background-image: url("/image/water.png"); }
-        &.desert { background-image: url("/image/desert.png"); }
     }
 
+    &.card-container {
+        position: relative;
+        width: 100%;
+        height: $tileHeight / 4;
+    }
+    &.card {
+        @extend div.tile;
+
+        width: $tileWidth / 4;
+        height: $tileHeight / 4;
+        background-size: contain;
+    }
+}
+
+div {
     &.road {
         position: absolute;
         left: 0;
@@ -138,6 +158,26 @@ div {
         background-color: black;
 
         @include transition(opacity 0.5s);
+
+        &::before {
+            box-sizing: border-box;
+            content: "";
+            display: block;
+
+            position: relative;
+            top: -100%;
+            width: 32px;
+            height: 32px;
+
+            border-top: 16px solid transparent;
+            border-right: 16px solid transparent;
+            border-left: 16px solid transparent;
+            border-bottom: 16px solid;
+        }
+    }
+    &.city {
+        width: 48px;
+        @include transition(width 0.5s);
     }
 
     &.player {

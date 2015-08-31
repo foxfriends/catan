@@ -45,7 +45,11 @@ io.on('connection', (socket) => {
                         [0,0,0,0,0],
                         [0,0,0,0,0]
                     ],
-                    connected: true
+                    connected: true,
+                    response: {
+                        robber: null,
+                        trade: null
+                    }
                 };
             } else {
                 socket.leave(gameName);
@@ -103,6 +107,12 @@ io.on('connection', (socket) => {
         }
         data[gameName].turnCount++;
         data[gameName].rolled = false;
+        for(let player in data[gameName].players) {
+            data[gameName].players[player].response = {
+                robber: null,
+                trade: null
+            };
+        }
         game.save(gameName, data[gameName]);
         socket.broadcast.to(gameName).emit('game:data', data[gameName]);
         res(null, data[gameName]);
@@ -114,18 +124,20 @@ io.on('connection', (socket) => {
         ];
         data[gameName].dice = dice;
         data[gameName].rolled = true;
-        for(let i = 0; i < data[gameName].tiles.length; i++) {
-            for(let j = 0; j < data[gameName].tiles[i].length; j++) {
-                if(data[gameName].tiles[i][j][1] == dice[0] + dice[1]) {
-                    let adj = adjacent(i, j, 'tile', 'house');
-                    adj.forEach((house) => {
-                        if(data[gameName].houses[house[0]][house[1]][0]) {
-                            let houseOwner = data[gameName].houses[house[0]][house[1]][1];
-                            let resourceType = data[gameName].tiles[i][j][0];
-                            let quantity = data[gameName].houses[house[0]][house[1]][0];
-                            data[gameName].players[houseOwner].hand[CONST.RESOURCE][resourceType] += quantity;
-                        }
-                    });
+        if(dice[0] + dice[1] !== 7) {
+            for(let i = 0; i < data[gameName].tiles.length; i++) {
+                for(let j = 0; j < data[gameName].tiles[i].length; j++) {
+                    if(data[gameName].tiles[i][j][1] == dice[0] + dice[1]) {
+                        let adj = adjacent(i, j, 'tile', 'house');
+                        adj.forEach((house) => {
+                            if(data[gameName].houses[house[0]][house[1]][0]) {
+                                let houseOwner = data[gameName].houses[house[0]][house[1]][1];
+                                let resourceType = data[gameName].tiles[i][j][0];
+                                let quantity = data[gameName].houses[house[0]][house[1]][0];
+                                data[gameName].players[houseOwner].hand[CONST.RESOURCE][resourceType] += quantity;
+                            }
+                        });
+                    }
                 }
             }
         }
@@ -168,36 +180,47 @@ io.on('connection', (socket) => {
         data[gameName].players[playerName].hand[CONST.RESOURCE][CONST.ROCK] -= 3;
         data[gameName].players[playerName].hand[CONST.RESOURCE][CONST.WHEAT] -= 2;
         socket.broadcast.to(gameName).emit('game:data', data[gameName]);
-        res(null, [[data[gameName], [i, j]]]);
+        res(null, [data[gameName], [i, j]]);
     });
 
     //Robber events
     socket.on('robber:start', (x, res) => {
-        data[gameName].players.map((player) => {
-            player.response = {robber: false};
-            return player;
-        });
-        io.to(gameName).emit('game:data', data[gameName]);
+        for(let player in data[gameName].players) {
+            data[gameName].players[player].response.robber = false;
+        }
+        socket.broadcast.to(gameName).emit('game:data', data[gameName]);
         res(null, data[gameName]);
     });
     socket.on('robber:move', (pos, res) => {
         data[gameName].robber = pos;
-        io.to(gameName).emit('game:data', data[gameName]);
+        socket.broadcast.to(gameName).emit('game:data', data[gameName]);
+        res(null, data[gameName]);
     });
     socket.on('robber:steal', (target, res) => {
         let r;
-        while(!data[gameName].players[target].hand[CONST.RESOURCE][(r = (Math.random() * 10) % 5)]);
+        do {
+            r = Math.floor((Math.random() * 10) % 5);
+        } while(data[gameName].players[target].hand[CONST.RESOURCE][r] < 1);
+        console.log(target, playerName, r);
         data[gameName].players[target].hand[CONST.RESOURCE][r]--;
         data[gameName].players[playerName].hand[CONST.RESOURCE][r]++;
-        io.to(gameName).emit('game:data', data[gameName]);
+        socket.broadcast.to(gameName).emit('game:data', data[gameName]);
+        res(null, data[gameName]);
     });
     socket.on('robber:discard', (discards, res) => {
         discards.forEach((c) => {
             data[gameName].players[playerName].hand[CONST.RESOURCE][c]--;
         });
-        data[gameName].players[playerName].response = {robber: true};
-        io.to(gameName).emit('game:data', data[gameName]);
-        res(null, data[gameName]);
+        data[gameName].players[playerName].response.robber = true;
+        let done = true;
+        Object.keys(data[gameName].players).forEach((player) => {
+            if(!data[gameName].players[player].response.robber) {
+                done = false;
+            }
+        });
+        socket.broadcast.to(gameName).emit('game:data', data[gameName]);
+        socket.broadcast.to(gameName).emit('robber:progress', [data[gameName], done]);
+        res(null, [data[gameName], done]);
     });
 
     //End game
