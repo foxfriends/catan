@@ -20,6 +20,13 @@ $playerBoxHeight: 75px;
     -moz-border-radius: $radius;
     border-radius: $radius;
 }
+@mixin transform-origin($x, $y) {
+    -webkit-transform-origin: $x $y;
+    -moz-transform-origin: $x $y;
+    -ms-transform-origin: $x $y;
+    -o-transform-origin: $x $y;
+    transform-origin: $x $y;
+}
 
 * {
     padding: 0;
@@ -86,8 +93,8 @@ div {
     &.forest, &.wood { background-image: url("/image/wood.png"); }
     &.quarry, &.brick{ background-image: url("/image/brick.png"); }
     &.mountain, &.ore { background-image: url("/image/ore.png"); }
+    &.desert, &.any { background-image: url("/image/desert.png"); }
     &.water { background-image: url("/image/water.png"); }
-    &.desert { background-image: url("/image/desert.png"); }
 }
 
 div {
@@ -114,6 +121,20 @@ div {
         width: $tileWidth / 4;
         height: $tileHeight / 4;
         background-size: contain;
+    }
+}
+
+div {
+    &.port {
+        @extend div.tile;
+
+        z-index: 1;
+
+        @include transform-origin(center, center);
+
+        background-repeat: no-repeat;
+        background-position: 100% center;
+        background-size: ($tileWidth/4) ($tileHeight/4);
     }
 }
 
@@ -146,7 +167,9 @@ div {
             div.road { transform: rotate(90deg) translate(-8px, 0); }
         }
     }
+}
 
+div {
     &.house {
         position: absolute;
         left: 0;
@@ -179,7 +202,8 @@ div {
         width: 48px;
         @include transition(width 0.5s);
     }
-
+}
+div {
     &.player {
         position: fixed;
         height: $playerBoxHeight;
@@ -189,7 +213,8 @@ div {
         &.me { width: 100%; bottom: 0; }
         &:not(.me) { top: 0; }
     }
-
+}
+div {
     &.overlay {
         box-sizing: border-box;
         display: none;
@@ -244,7 +269,8 @@ div {
 
         cursor: pointer;
     }
-
+}
+div {
     &#chatbox_container {
         position: fixed;
         left: 0;

@@ -3,65 +3,81 @@ import {CONST} from './const.es6';
 import {default as $} from 'jquery';
 
 export let arrange = (data, your_name) => {
-    let i, j;
-    for(i = 0; i < data.tiles.length; i++) {
-        for(j = 0; j < data.tiles[i].length; j++) {
-            $('.tile_row').eq(i).children('.tile').eq(j)
+    $('.tile_row').each(function(i) {
+        $(this).children('.tile').each(function(j) {
+            $(this).css({
+                    left: `${200 + (200 * j + 100 * Math.abs(i - 2))}px`,
+                    top: `${174 * i}px`}
+                )
+            .attr('class', `tile ${['pasture','field','forest','quarry','mountain','desert','water'][data.tiles[i][j][0]]}`)
+            .html('')
+            .append(data.tiles[i][j][1] === 7 ? '' : $('<span></span>')
+                .addClass(`number ${[6,8].indexOf(data.tiles[i][j][1]) !== -1 ? 'red' : ''}`)
+                .text(data.tiles[i][j][1])
+            )
+            .append($('<img>')
+                .attr('src', '/image/robber.png')
+                .addClass('robber')
                 .css({
-                        left: `${200 + (200 * j + 100 * Math.abs(i - 2))}px`,
-                        top: `${174 * i}px`}
-                    )
-                .attr('class', `tile ${['pasture','field','forest','quarry','mountain','desert','water'][data.tiles[i][j][0]]}`)
-                .html('')
-                .append(data.tiles[i][j][1] === 7 ? '' : $('<span></span>')
-                    .addClass(`number ${[6,8].indexOf(data.tiles[i][j][1]) !== -1 ? 'red' : ''}`)
-                    .text(data.tiles[i][j][1])
-                )
-                .append($('<img>')
-                    .attr('src', '/image/robber.png')
-                    .addClass('robber')
-                    .css({
-                        opacity: (data.robber[0] === i && data.robber[1] === j) ? 1 : 0,
-                        cursor: 'default'
-                    })
-                    .off('click')
-                );
-        }
-    }
-    for(i = 0; i < data.roads.length; i++) {
-        for(j = 0; j < data.roads[i].length; j++) {
-            let road = document.getElementsByClassName('road_row')[i].getElementsByClassName('road')[j];
-            $('.road_row').eq(i).children('.road').eq(j)
-                .css(
-                    //Position
-                    i & 1 ? {
-                        left: `${150 + (200 * j + 100 * Math.abs((i - 1) / 2 - 2))}px`,
-                        top: `${174 * (i - 1) / 2 + 231 / 2}px`
-                    } : {
-                        left: `${150 + (100 * j + 100 * Math.abs((i - 1) / 2 - 2))}px`,
-                        top: `${174 * i / 2 + 231 / 12}px`
-                    }
-                )
-                .css(
-                    //Color
-                    data.roads[i][j] !== -1 ? {
-                        'background-color': data.players[data.roads[i][j]].color,
-                        opacity: 1
-                    } : {
-                        opacity: 0
-                    }
-                )
-                .css({
-                    'pointer-events': 'none',
+                    opacity: (data.robber[0] === i && data.robber[1] === j) ? 1 : 0,
                     cursor: 'default'
                 })
-                .off('click');
-        }
-    }
-    for(i = 0; i < data.houses.length; i++) {
-        for(j = 0; j < data.houses[i].length; j++) {
-            let house = $('.house_row').eq(i).children('.house').eq(j)
-                .css({
+                .off('click')
+            );
+        });
+    });
+
+    let portPos = [
+        [300, -174, 60], [700, -174, 120],
+        [1000, 0, 120],
+        [100, 174 * 1, 0],
+        [1200, 174 * 2, 180],
+        [100, 174 * 3, 0],
+        [1000, 174 * 4, -120],
+        [300, 174 * 5, -60],[700, 174 * 5, -120]
+    ];
+    $('.port').each(function(i) {
+        $(this).css({
+                left: `${portPos[i][0]}px`,
+                top: `${portPos[i][1]}px`,
+                transform: `rotate(${portPos[i][2]}deg)`
+        })
+        .attr('class', `port ${['pasture','field','forest','quarry','mountain','any'][data.ports[i]]}`)
+        .html('');
+    });
+
+    $('.road_row').each(function(i) {
+        $(this).children('.road').each(function(j) {
+            $(this).css(
+                //Position
+                i & 1 ? {
+                    left: `${150 + (200 * j + 100 * Math.abs((i - 1) / 2 - 2))}px`,
+                    top: `${174 * (i - 1) / 2 + 231 / 2}px`
+                } : {
+                    left: `${150 + (100 * j + 100 * Math.abs((i - 1) / 2 - 2))}px`,
+                    top: `${174 * i / 2 + 231 / 12}px`
+                }
+            )
+            .css(
+                //Color
+                data.roads[i][j] !== -1 ? {
+                    'background-color': data.players[data.roads[i][j]].color,
+                    opacity: 1
+                } : {
+                    opacity: 0
+                }
+            )
+            .css({
+                'pointer-events': 'none',
+                cursor: 'default'
+            })
+            .off('click');
+        });
+    });
+
+    $('.house_row').each(function(i) {
+        $(this).children('.house').each(function(j) {
+            $(this).css({
                     //Position
                     left: `${(100 + 100 * j + 100 * Math.abs(i - 3) - 16 + 100 * (i >= 3))}px`,
                     top: i < 3 ?
@@ -85,12 +101,12 @@ export let arrange = (data, your_name) => {
                 })
                 .off('click');
             if(data.houses[i][j][0] === 2) {
-                house.addClass('city');
+                $(this).addClass('city');
             } else {
-                house.removeClass('city');
+                $(this).removeClass('city');
             }
-        }
-    }
+        });
+    });
     let colors = {
         'red': 'RGBA(255, 150, 150, 0.5)',
         'orange': 'RGBA(255, 127, 0, 0.5)',
