@@ -32,16 +32,16 @@ export class Robber {
             )
             .append($('<p></p>')
                 .text('To discard')
-                .append($('<hr>'))
             )
+            .append($('<hr>'))
             .append($('<div></div>')
                 .addClass('card-container')
                 .attr('id', 'to-discard')
             )
             .append($('<p></p>')
                 .text('To keep')
-                .append($('<hr>'))
             )
+            .append($('<hr>'))
             .append($('<div></div>')
                 .addClass('card-container')
                 .attr('id', 'to-keep')
@@ -59,7 +59,7 @@ export class Robber {
                 })
             );
         let hand = new Array(...data.players[this[PLAYER]].hand[CONST.RESOURCE]);
-        let resourceNames = ['sheep', 'wheat', 'wood', 'brick', 'ore'];
+        let resourceNames = ['wool', 'wheat', 'wood', 'brick', 'ore'];
         let discards = $('#to-discard');
         let keeps = $('#to-keep');
 
@@ -193,7 +193,7 @@ export class Robber {
         });
         if(skip) {
             window.setTimeout(() => {
-                this[GEN].next();
+                this[GEN].next([null, data]);
             }, 0);
         }
     }

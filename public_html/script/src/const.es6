@@ -26,6 +26,8 @@ export const CONST = {
     YEAR_OF_PLENTY: 4,
     RESOURCE: 0,
     DEVELOPMENT: 1,
+    READY: 0,
+    BOUGHT: 1,
     OPEN: 0,
     SETUP: 1,
     PLAY: 2

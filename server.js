@@ -43,7 +43,7 @@ io.on('connection', (socket) => {
                     color: '',
                     hand: [
                         [0,0,0,0,0],
-                        [0,0,0,0,0]
+                        [[0,0,0,0,0],[0,0,0,0,0]]
                     ],
                     connected: true,
                     response: {
@@ -112,6 +112,11 @@ io.on('connection', (socket) => {
                 robber: null,
                 trade: null
             };
+            for(let i = 0; i < data[gameName].players[player].hand[CONST.DEVELOPMENT][CONST.READY].length; i++) {
+                //Transfer bought devcards to ready devcards
+                data[gameName].players[player].hand[CONST.DEVELOPMENT][CONST.READY][i] += data[gameName].players[player].hand[CONST.DEVELOPMENT][CONST.BOUGHT][i];
+                data[gameName].players[player].hand[CONST.DEVELOPMENT][CONST.BOUGHT][i] = 0;
+            }
         }
         game.save(gameName, data[gameName]);
         socket.broadcast.to(gameName).emit('game:data', data[gameName]);
@@ -183,6 +188,41 @@ io.on('connection', (socket) => {
         res(null, [data[gameName], [i, j]]);
     });
 
+    //Development cards
+    socket.on('devcard:buy', (x, res) => {
+        let c;
+        if(data[gameName].devCards.length > 0) {
+            data[gameName].devCards.splice(0, 1);
+            data[gameName].players[playerName].hand[CONST.DEVELOPMENT][CONST.BOUGHT][c] += 1;
+            data[gameName].players[playerName].hand[CONST.RESOURCE][CONST.ORE] -= 1;
+            data[gameName].players[playerName].hand[CONST.RESOURCE][CONST.WOOL] -= 1;
+            data[gameName].players[playerName].hand[CONST.RESOURCE][CONST.WHEAT] -= 1;
+        }
+        socket.broadcast.to(gameName).emit('game:data', data[gameName]);
+        res(c !== undefined ? null : 'There are no more dev cards', [data[gameName], c !== undefined ? ['Knight','VP','Monopoly','Road Building','Year Of Plenty'][c] : '']);
+    });
+    socket.on('devcard:play', (which, res) => {
+        data[gameName].players[playerName].hand[CONST.DEVELOPMENT][CONST.READY][which] -= 1;
+        socket.broadcast.to(gameName).emit('game:data', data[gameName]);
+        res(null, data[gameName]);
+    });
+    socket.on('devcard:monopoly', (which, res) => {
+        for(let player in data[gameName].players) {
+            if(player != playerName) {
+                data[gameName].players[playerName].hand[CONST.RESOURCE][which] += data[gameName].players[player].hand[CONST.RESOURCE][which];
+                data[gameName].players[player].hand[CONST.RESOURCE][which] = 0;
+            }
+        }
+        socket.broadcast.to(gameName).emit('game:data', data[gameName]);
+        res(null, data[gameName]);
+    });
+    socket.on('devcard:plenty', (which, res) => {
+        data[gameName].players[playerName].hand[CONST.RESOURCE][which[0]] += 1;
+        data[gameName].players[playerName].hand[CONST.RESOURCE][which[1]] += 1;
+        socket.broadcast.to(gameName).emit('game:data', data[gameName]);
+        res(null, data[gameName]);
+    });
+
     //Robber events
     socket.on('robber:start', (x, res) => {
         for(let player in data[gameName].players) {
@@ -201,7 +241,6 @@ io.on('connection', (socket) => {
         do {
             r = Math.floor((Math.random() * 10) % 5);
         } while(data[gameName].players[target].hand[CONST.RESOURCE][r] < 1);
-        console.log(target, playerName, r);
         data[gameName].players[target].hand[CONST.RESOURCE][r]--;
         data[gameName].players[playerName].hand[CONST.RESOURCE][r]++;
         socket.broadcast.to(gameName).emit('game:data', data[gameName]);

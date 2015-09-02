@@ -77,10 +77,6 @@ export class Catan {
             .off('submit');
     }
 
-    error(err) {
-        alert(err);
-    }
-
     startButtonShow() {
         $('#start_game')
             .css('display', 'block')

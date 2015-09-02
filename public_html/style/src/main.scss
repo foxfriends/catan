@@ -44,6 +44,32 @@ body {
     background-position: 0 100px;
 }
 
+div#alert {
+    position: fixed;
+    top: 50px;
+    left: 50px;
+    right: 50px;
+    z-index: 5;
+
+    height: 40px;
+
+    font-size: 16pt;
+    line-height: 40px;
+    text-align: center;
+    
+    opacity: 0;
+
+    @include transition(opacity 0.5s);
+    @include border-radius(15px);
+
+    &.error {
+        opacity: 1;
+        border: 1px solid rgb(255, 0, 0);
+        background-color: rgb(230, 92, 92)
+    }
+}
+
+
 img.robber {
     position: absolute;
     display: block;
@@ -88,10 +114,10 @@ div {
     &.blue { background-color: blue; }
     &.white { background-color: white; }
 
-    &.pasture, &.sheep { background-image: url("/image/wool.png"); }
+    &.pasture, &.wool { background-image: url("/image/wool.png"); }
     &.field, &.wheat { background-image: url("/image/wheat.png"); }
     &.forest, &.wood { background-image: url("/image/wood.png"); }
-    &.quarry, &.brick{ background-image: url("/image/brick.png"); }
+    &.quarry, &.brick { background-image: url("/image/brick.png"); }
     &.mountain, &.ore { background-image: url("/image/ore.png"); }
     &.desert, &.any { background-image: url("/image/desert.png"); }
     &.water { background-image: url("/image/water.png"); }
@@ -114,6 +140,22 @@ div {
         position: relative;
         width: 100%;
         height: $tileHeight / 4;
+        text-align: center;
+    }
+    &.devcard-container {
+        position: relative;
+        width: $tileWidth / 4 * 3;
+        margin: 0 auto;
+    }
+    &.resource-container {
+        @extend div.devcard-container;
+
+        width: $tileWidth / 4 * 5;
+
+        .card {
+            display: inline-block;
+            position: static;
+        }
     }
     &.card {
         @extend div.tile;
@@ -122,13 +164,29 @@ div {
         height: $tileHeight / 4;
         background-size: contain;
     }
+    &.devcard {
+        @extend div.card;
+
+        &.monopoly {
+            left: 0;
+            background-color: red;
+        }
+        &.road-building {
+            left: $tileWidth / 4;
+            background-color: blue;
+        }
+        &.year-of-plenty {
+            left: $tileWidth / 2;
+            background-color: green;
+        }
+    }
 }
 
 div {
     &.port {
         @extend div.tile;
 
-        z-index: 1;
+        z-index: -1;
 
         @include transform-origin(center, center);
 

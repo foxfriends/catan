@@ -172,7 +172,7 @@ export class Build {
         this.cityHide(data);
     }
     cityShow(data) {
-        if(data.players[this[PLAYER]].hand[CONST.RESOURCE][CONST.ORE] >= 2 && data.players[this[PLAYER]].hand[CONST.RESOURCE][CONST.WHEAT] >= 3) {
+        if(data.players[this[PLAYER]].hand[CONST.RESOURCE][CONST.ORE] >= 3 && data.players[this[PLAYER]].hand[CONST.RESOURCE][CONST.WHEAT] >= 2) {
             for(let i = 0; i < data.houses.length; i++) {
                 for(let j = 0; j < data.houses[i].length; j++) {
                     if(data.houses[i][j][0] === 1 && data.houses[i][j][1] === this[PLAYER]) {

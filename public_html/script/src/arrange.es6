@@ -142,7 +142,7 @@ export let arrange = (data, your_name) => {
                 'background-color': colors[data.players[name].color]
             })
             .children('.name').text(name);
-        $('#buy-dev-card,#play-dev-card,#init-trade,#end-turn').css('display', 'none');
+        $('#buy-dev-card,#play-dev-card,#init-trade,#end-turn').css('display', 'none').off('click');
         // Points
         // Prizes
     });

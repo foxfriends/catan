@@ -72,7 +72,7 @@ class Game {
             }
         }
         let ports = shuffle([0, 1, 2, 3, 4, 5, 5, 5, 5]);
-        let dev_cards = shuffle([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 3, 3, 4, 4]);
+        let devCards = shuffle([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 3, 3, 4, 4]);
 
         let data = {
             tiles: tiles,
@@ -98,13 +98,16 @@ class Game {
                 [[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0]],
                 [[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0],[0, 0]]
             ],
-            dev_cards: dev_cards,
+            devCards: devCards,
             trade: null,
             players: {
                 /*
                 name: {
                     turn: 0,
-                    hand: [[0,0,0,0,0], [0,0,0,0,0]],
+                    hand: [
+                        [0,0,0,0,0],
+                        [[0,0,0,0,0],[0,0,0,0,0]]
+                    ],
                     color: 'red'|'orange'|'blue'|'white',
                     response: {
                         robber: null,

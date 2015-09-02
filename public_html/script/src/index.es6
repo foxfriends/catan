@@ -12,6 +12,7 @@ import {Trade} from './trade.es6';
 import {DevCard} from './devcard.es6';
 import {Catan} from './catan.es6';
 import {arrange} from './arrange.es6';
+import {showAlert} from './alert.es6';
 
 let robberDiscarding = function*(data, player, robber) {
     let cardCount = data.players[player].hand[CONST.RESOURCE].reduce((p, c) => p + c, 0);
@@ -36,7 +37,7 @@ let run = (function* () {
         let [err, msg] = yield socket.emit('game:join', [game, player], (...params) => run.next(params));
         if(err !== null) {
             //If there was an error, tell the player and reject them
-            catan.error(msg);
+            showAlert(msg);
             game = undefined;
         } else {
             //Accepted into a game
@@ -82,8 +83,10 @@ let run = (function* () {
         if(data.turn === data.players[player].turn) {
             //On your turn, do a lot
             if(!data.rolled) {
-                if(data.players[player].hand[CONST.DEVELOPMENT][CONST.KNIGHT]) {
-                    if(yield catan.playKnightShow()) {
+                if(data.players[player].hand[CONST.DEVELOPMENT][CONST.READY][CONST.KNIGHT] > 0) {
+                    let playKnight = false;
+                    [, [data, playKnight]] = yield devcard.playKnightShow(data);
+                    if(playKnight) {
                         [, data] = yield robber.moveShow(data);
                         arrange(data, player);
                         [, data] = yield robber.stealShow(data);
@@ -93,7 +96,7 @@ let run = (function* () {
                 [,data] = yield catan.roll();
                 arrange(data, player);
             }
-            if(data.dice[0] + data.dice[1] === 7) {
+            if(data.dice[0] + data.dice[1] === 7 && !data.players[player].response.robber) {
                 if(data.players[player].response.robber === null) {
                     [, data] = yield robber.start();
                 }
@@ -117,13 +120,15 @@ let run = (function* () {
             build.roadShow(data);
             build.cityShow(data);
             devcard.buyShow(data);
-
-            devcard.playShow(data);
+            devcard.playButtonShow(data);
             trade.buttonShow(data);
             catan.turnEndShow();
 
-            let d, extra;
-            [, [d, extra]] = yield;
+            let err, d, extra;
+            [err, [d, extra]] = yield;
+            if(err !== null) {
+                showAlert(err, 'error');
+            }
             if(d !== null) {
                 data = d;
             }
@@ -143,15 +148,15 @@ let run = (function* () {
                         arrange(data, player);
                     }
                     break;
-                case 'yearofplenty':
-                    data = yield devcard.yearOfPlenty();
+                case CONST.YEAR_OF_PLENTY:
+                    [, data] = yield devcard.yearOfPlenty();
                     arrange(data, player);
                     break;
-                case 'monopoly':
-                    data = yield devcard.monopoly();
+                case CONST.MONOPOLY:
+                    [, data] = yield devcard.monopoly();
                     arrange(data, player);
                     break;
-                case 'roadbuilding':
+                case CONST.ROAD_BUILDING:
                     [,[data]] = yield build.roadShow(data, true);
                     arrange(data, player);
                     [,[data]] = yield build.roadShow(data, true);
