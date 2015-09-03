@@ -37,7 +37,7 @@ let run = (function* () {
         let [err, msg] = yield socket.emit('game:join', [game, player], (...params) => run.next(params));
         if(err !== null) {
             //If there was an error, tell the player and reject them
-            showAlert(msg);
+            showAlert(msg, 'error');
             game = undefined;
         } else {
             //Accepted into a game
@@ -135,7 +135,7 @@ let run = (function* () {
             arrange(data, player);
             switch(extra) {
                 case 'trade':
-                    yield trade.offer();
+                    yield trade.offerShow();
                     let responses = [];
                     while(responses.length < Object.keys(data.players).length - 1) {
                         responses.push(yield trade.awaitResponses());
@@ -157,10 +157,21 @@ let run = (function* () {
                     arrange(data, player);
                     break;
                 case CONST.ROAD_BUILDING:
-                    [,[data]] = yield build.roadShow(data, true);
-                    arrange(data, player);
-                    [,[data]] = yield build.roadShow(data, true);
-                    arrange(data, player);
+                    try {
+                        let err;
+                        [err, [data]] = yield build.roadShow(data, true);
+                        arrange(data, player);
+                        if(err) {
+                            throw err;
+                        }
+                        [err,[data]] = yield build.roadShow(data, true);
+                        arrange(data, player);
+                        if(err) {
+                            throw err;
+                        }
+                    } catch(e) {
+                        showAlert(e, 'error');
+                    }
                     break;
                 case 'done':
                     [, data] = yield catan.turn();

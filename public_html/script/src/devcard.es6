@@ -20,6 +20,7 @@ export class DevCard {
 
     buy(data) {
         this[SOCKET].emit('devcard:buy', null, (err, res) => {
+            showAlert(`Got a ${res[1]} card.`, 'success');
             this[GEN].next([err, res]);
         });
     }

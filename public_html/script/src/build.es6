@@ -21,6 +21,16 @@ export class Build {
         this.houseHide(data);
     }
     houseShow(data) {
+        //Count houses, don't show if there are 5
+        for(let i = 0, c = 0; i < data.houses.length; i++) {
+            for(let j = 0; j < data.houses[i].length; j++) {
+                if(data.houses[i][j][0] === 1 && data.houses[i][j][1] === this[PLAYER]) {
+                    if(++c === 5) {
+                        return;
+                    }
+                }
+            }
+        }
         for(let i = 0; i < data.houses.length; i++) {
             for(let j = 0; j < data.houses[i].length; j++) {
                 //Check if each house should be buildable
@@ -97,6 +107,22 @@ export class Build {
             //Otherwise, the only option is if it is free
             free = !!options;
         }
+        //Count roads, don't show if there are 15
+        for(let i = 0, c = 0; i < data.roads.length; i++) {
+            for(let j = 0; j < data.roads[i].length; j++) {
+                if(data.roads[i][j] === this[PLAYER]) {
+                    if(++c === 15) {
+                        if(free) {
+                            //Continue automatically if it's road building played
+                            window.setTimeout(() => {
+                                this[GEN].next(['You have too many roads', [data, null]]);
+                            }, 0);
+                        }
+                        return;
+                    }
+                }
+            }
+        }
         let hand = data.players[this[PLAYER]].hand[CONST.RESOURCE];
         if(free || (hand[CONST.WOOD] && hand[CONST.BRICK])) {
             //If the player has enough resources
@@ -172,6 +198,16 @@ export class Build {
         this.cityHide(data);
     }
     cityShow(data) {
+        //Count houses, don't show if there are 5
+        for(let i = 0, c = 0; i < data.houses.length; i++) {
+            for(let j = 0; j < data.houses[i].length; j++) {
+                if(data.houses[i][j][0] === 2 && data.houses[i][j][1] === this[PLAYER]) {
+                    if(++c === 4) {
+                        return;
+                    }
+                }
+            }
+        }
         if(data.players[this[PLAYER]].hand[CONST.RESOURCE][CONST.ORE] >= 3 && data.players[this[PLAYER]].hand[CONST.RESOURCE][CONST.WHEAT] >= 2) {
             for(let i = 0; i < data.houses.length; i++) {
                 for(let j = 0; j < data.houses[i].length; j++) {

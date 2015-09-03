@@ -119,12 +119,10 @@ export let arrange = (data, your_name) => {
         if(name !== your_name) {
             player = $(`.player`).eq(n++);
             player.children('.cards').html(
-                `<img src='image/wool.png' width='20'>` +
-                `<img src='image/wheat.png' width='20'>` +
-                `<img src='image/wood.png' width='20'>` +
-                `<img src='image/brick.png' width='20'>` +
-                `<img src='image/ore.png' width='20'>` +
-                data.players[name].hand[CONST.RESOURCE].reduce((x, y) => x + y, 0)
+                `<img src='image/resourcecard.png' width='20'>` +
+                data.players[name].hand[CONST.RESOURCE].reduce((p, c) => p + c, 0) +
+                `<img src='image/devcard.png' width='20'>` +
+                data.players[name].hand[CONST.DEVELOPMENT].reduce((p, c) => p + c.reduce((p,c) => p + c, 0), 0)
             );
         } else {
             player = $('.player.me');
@@ -133,7 +131,12 @@ export let arrange = (data, your_name) => {
                 `<img src='image/wheat.png' width='20'> ${data.players[name].hand[CONST.RESOURCE][CONST.WHEAT]}` +
                 `<img src='image/wood.png' width='20'> ${data.players[name].hand[CONST.RESOURCE][CONST.WOOD]}` +
                 `<img src='image/brick.png' width='20'> ${data.players[name].hand[CONST.RESOURCE][CONST.BRICK]}` +
-                `<img src='image/ore.png' width='20'> ${data.players[name].hand[CONST.RESOURCE][CONST.ORE]}`
+                `<img src='image/ore.png' width='20'> ${data.players[name].hand[CONST.RESOURCE][CONST.ORE]}` +
+                `<img src='image/knight.png' width='20'> ${data.players[name].hand[CONST.DEVELOPMENT][CONST.READY][CONST.KNIGHT] + data.players[name].hand[CONST.DEVELOPMENT][CONST.BOUGHT][CONST.KNIGHT]}` +
+                `<img src='image/vpcard.png' width='20'> ${data.players[name].hand[CONST.DEVELOPMENT][CONST.READY][CONST.VP] + data.players[name].hand[CONST.DEVELOPMENT][CONST.BOUGHT][CONST.VP]}` +
+                `<img src='image/monopoly.png' width='20'> ${data.players[name].hand[CONST.DEVELOPMENT][CONST.READY][CONST.MONOPOLY] + data.players[name].hand[CONST.DEVELOPMENT][CONST.BOUGHT][CONST.MONOPOLY]}` +
+                `<img src='image/roadbuilding.png' width='20'> ${data.players[name].hand[CONST.DEVELOPMENT][CONST.READY][CONST.ROAD_BUILDING] + data.players[name].hand[CONST.DEVELOPMENT][CONST.BOUGHT][CONST.ROAD_BUILDING]}` +
+                `<img src='image/yearofplenty.png' width='20'> ${data.players[name].hand[CONST.DEVELOPMENT][CONST.READY][CONST.YEAR_OF_PLENTY] + data.players[name].hand[CONST.DEVELOPMENT][CONST.BOUGHT][CONST.YEAR_OF_PLENTY]}`
             );
         }
         player
@@ -146,6 +149,7 @@ export let arrange = (data, your_name) => {
         // Points
         // Prizes
     });
+    $('#dev-cards-left').text(data.devCards.length);
     $('#yellowdie').attr('src', `/image/ydie${data.dice[0]}.png`);
     $('#reddie').attr('src', `/image/rdie${data.dice[1]}.png`);
 };

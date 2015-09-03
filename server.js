@@ -190,16 +190,18 @@ io.on('connection', (socket) => {
 
     //Development cards
     socket.on('devcard:buy', (x, res) => {
-        let c;
+        let c, err;
         if(data[gameName].devCards.length > 0) {
-            data[gameName].devCards.splice(0, 1);
+            c = data[gameName].devCards.splice(0, 1);
             data[gameName].players[playerName].hand[CONST.DEVELOPMENT][CONST.BOUGHT][c] += 1;
             data[gameName].players[playerName].hand[CONST.RESOURCE][CONST.ORE] -= 1;
             data[gameName].players[playerName].hand[CONST.RESOURCE][CONST.WOOL] -= 1;
             data[gameName].players[playerName].hand[CONST.RESOURCE][CONST.WHEAT] -= 1;
+        } else {
+            err = "There are no more development cards";
         }
         socket.broadcast.to(gameName).emit('game:data', data[gameName]);
-        res(c !== undefined ? null : 'There are no more dev cards', [data[gameName], c !== undefined ? ['Knight','VP','Monopoly','Road Building','Year Of Plenty'][c] : '']);
+        res(err, [data[gameName], c !== undefined ? ['Knight','VP','Monopoly','Road Building','Year Of Plenty'][c] : '']);
     });
     socket.on('devcard:play', (which, res) => {
         data[gameName].players[playerName].hand[CONST.DEVELOPMENT][CONST.READY][which] -= 1;

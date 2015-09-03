@@ -56,7 +56,7 @@ div#alert {
     font-size: 16pt;
     line-height: 40px;
     text-align: center;
-    
+
     opacity: 0;
 
     @include transition(opacity 0.5s);
@@ -64,8 +64,13 @@ div#alert {
 
     &.error {
         opacity: 1;
-        border: 1px solid rgb(255, 0, 0);
-        background-color: rgb(230, 92, 92)
+        border: 1px solid rgb(74, 20, 20);
+        background-color: rgb(233, 196, 196)
+    }
+    &.success {
+        opacity: 1;
+        border: 1px solid rgb(27, 147, 27);
+        background-color: rgb(198, 241, 198)
     }
 }
 
