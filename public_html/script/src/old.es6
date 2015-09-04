@@ -149,7 +149,7 @@ let start_menu = (show) => {
     window.onkeydown = show ? undefined : open_inputs;
 };
 let init = () => {
-    overlay = document.getElementById("request_form");
+    overlay = document.getElementById("request-form");
     game_name = document.getElementById("game_name").value;
     your_name = document.getElementById("your_name").value;
     if(game_name !== "" && your_name !== "") {

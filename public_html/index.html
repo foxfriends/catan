@@ -263,7 +263,8 @@
         </div>
         <div id="chatbox_container"><span class="spacer"></span><div id="chatbox"></div></div>
         <div class="overlay" id="start_form">
-            <form action"#" onsubmit="return false;">
+            <span class="va-middle"></span>
+            <form action="#" onsubmit="return false;" class="va-middle">
                 <input type="text" name="game" id="game_name" placeholder="Game name" autocomplete="off" required>
                 <input type="text" name="name" id="your_name" placeholder="Your name" autocomplete="off" required>
                 <button>Start game</button>
@@ -271,7 +272,7 @@
             <div id="start_form_error"></div>
         </div>
         <div class="overlay" id="file-upload"></div>
-        <div class="overlay" id="request_form"></div>
+        <div class="overlay" id="request-overlay"><span class="va-middle"></span><div class="va-middle" id="request-form"></div></div>
         <button id="start_game">Start!</button>
         <script src="script/catan.js"></script>
     </body>

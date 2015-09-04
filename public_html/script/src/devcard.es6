@@ -13,9 +13,10 @@ export class DevCard {
     }
 
     formHide() {
-        $('#request_form')
-            .html('')
+        $('#request-overlay')
             .css('display', 'none');
+        $('#request-form')
+            .html('');
     }
 
     buy(data) {
@@ -60,8 +61,8 @@ export class DevCard {
     }
     playShow(data) {
         let cont;
-        $('#request_form')
-            .css('display', 'block')
+        $('#request-overlay').css('display', 'block');
+        $('#request-form')
             .append($('<h2></h2>')
                 .text('Play a development card')
             )
@@ -114,8 +115,8 @@ export class DevCard {
 
     playKnightShow(data) {
         if(data.players[this[PLAYER]].hand[CONST.DEVELOPMENT][CONST.READY][CONST.KNIGHT] > 0) {
-            $('#request_form')
-                .css('display', 'block')
+            $('#request-overlay').css('display', 'block');
+            $('#request-form')
                 .append($('<h2></h2>')
                     .text('Play the knight card?')
                 )
@@ -144,8 +145,8 @@ export class DevCard {
     }
 
     monopoly() {
-        $('#request_form')
-            .css('display', 'block')
+        $('#request-overlay').css('display', 'block');
+        $('#request-form')
             .append($('<h2></h2>')
                 .text('Take all of which resource?')
             )
@@ -218,8 +219,8 @@ export class DevCard {
                         $(this).remove();
                     }));
         };
-        $('#request_form')
-            .css('display', 'block')
+        $('#request-overlay').css('display', 'block');
+        $('#request-form')
             .append($('<h2></h2>')
                 .text('Choose 2 resources')
             )

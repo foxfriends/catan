@@ -288,6 +288,52 @@ export let adjacent = (i, j, typea, typeb) => {
                     }
                 }
                 return set;
+            },
+            port: (a, b) => {
+                switch(a) {
+                    case 0:
+                        if(b === 0 || b === 1) {
+                            return 0;
+                        } else if(b === 3 || b === 4) {
+                            return 1;
+                        }
+                        return null;
+                    case 1:
+                        if(b === 0) {
+                            return 3;
+                        } else if(b === 7 || b === 8) {
+                            return 2;
+                        }
+                        return null;
+                    case 2:
+                        if(b === 1) {
+                            return 3;
+                        } else if(b === 10) {
+                            return 4;
+                        }
+                        return null;
+                    case 3:
+                        if(b === 1) {
+                            return 5;
+                        } else if(b === 10) {
+                            return 4;
+                        }
+                        return null;
+                    case 4:
+                        if(b === 0) {
+                            return 5;
+                        } else if(b === 7 || b === 8) {
+                            return 6;
+                        }
+                        return null;
+                    case 5:
+                        if(b === 0 || b === 1) {
+                            return 7;
+                        } else if(b === 3 || b === 4) {
+                            return 8;
+                        }
+                        return null;
+                }
             }
         }
     };

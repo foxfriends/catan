@@ -25,8 +25,8 @@ export class Robber {
         });
     }
     discardShow(discarded, data) {
-        let form = $('#request_form')
-            .css('display', 'block')
+        $('#request-overlay').css('display', 'block');
+        let form = $('#request-form')
             .append($('<h2></h2>')
                 .text('The robber takes half your cards!')
             )
@@ -47,7 +47,7 @@ export class Robber {
                 .attr('id', 'to-keep')
             )
             .append($('<button></button>')
-                .text('Sort')
+                .text('Discard')
                 .attr('id', 'discard-button')
                 .click(() => {
                     discarded = [];
@@ -75,10 +75,10 @@ export class Robber {
             });
             if($('#to-discard').children('.card').length >= $('#to-keep').children('.card').length - 1) {
                 $('#discard-button')
-                    .text('Discard');
+                    .removeClass('not-clickable');
             } else {
                 $('#discard-button')
-                    .text('Sort');
+                    .addClass('not-clickable');
             }
         };
 
@@ -121,8 +121,9 @@ export class Robber {
         arrangeCards();
     }
     discardHide(data) {
-        let form = $('#request_form')
-            .css('display', 'none')
+        $('#request-overlay')
+            .css('display', 'none');
+        $('#request-form')
             .html('');
     }
 

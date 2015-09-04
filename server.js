@@ -264,6 +264,59 @@ io.on('connection', (socket) => {
         res(null, [data[gameName], done]);
     });
 
+    //Trade events
+    socket.on('trade:storage', (offer, res) => {
+        for(let c = 0; c < 5; c++) {
+            data[gameName].players[playerName].hand[CONST.RESOURCE][c] += offer.get[c];
+            data[gameName].players[playerName].hand[CONST.RESOURCE][c] -= offer.give[c];
+        }
+        socket.broadcast.to(gameName).emit('game:data', data[gameName]);
+        res(null, data[gameName]);
+    });
+    socket.on('trade:offer', (offer, res) => {
+        for(let player in data[gameName].players) {
+            data[gameName].players[player].response.trade = null;
+        }
+        offer.player = playerName;
+        data[gameName].trade = offer;
+        socket.broadcast.to(gameName).emit('game:data', data[gameName]);
+        res(null, [data[gameName], 'trade']);
+    });
+    socket.on('trade:respond', (offer, res) => {
+        data[gameName].players[playerName].response.trade = offer;
+        socket.broadcast.to(gameName).emit('game:data', data[gameName]);
+        res(null, data[gameName]);
+    });
+    socket.on('trade:accept', (name, res) => {
+        let offer;
+        for(let player in data[gameName].players) {
+            if(player === name) {
+                offer = data[gameName].players[player].response.trade;
+                if(offer.response && offer.response === true) {
+                    offer = data[gameName].trade;
+                }
+            }
+            data[gameName].players[player].response.trade = null;
+        }
+        data[gameName].trade = null;
+        for(let c = 0; c < 5; c++) {
+            data[gameName].players[name].hand[CONST.RESOURCE][c] -= offer.get[c];
+            data[gameName].players[name].hand[CONST.RESOURCE][c] += offer.give[c];
+            data[gameName].players[playerName].hand[CONST.RESOURCE][c] += offer.get[c];
+            data[gameName].players[playerName].hand[CONST.RESOURCE][c] -= offer.give[c];
+        }
+        socket.broadcast.to(gameName).emit('game:data', data[gameName]);
+        res(null, data[gameName]);
+    });
+    socket.on('trade:reject', (x, res) => {
+        for(let player in data[gameName].players) {
+            data[gameName].players[player].response.trade = null;
+        }
+        data[gameName].trade = null;
+        socket.broadcast.to(gameName).emit('game:data', data[gameName]);
+        res(null, data[gameName]);
+    });
+
     //End game
     socket.on('disconnect', () => {
         if(data[gameName] !== undefined) {

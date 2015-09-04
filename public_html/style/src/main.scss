@@ -140,12 +140,28 @@ div {
 
         @include transition(left 0.5s, top 0.5s);
     }
+    &.card {
+        @extend div.tile;
+
+        width: $tileWidth / 4;
+        height: $tileHeight / 4;
+        background-size: contain;
+    }
 
     &.card-container {
         position: relative;
         width: 100%;
         height: $tileHeight / 4;
         text-align: center;
+
+        &.small {
+            height: $tileHeight / 8;
+
+            .card {
+                width: $tileWidth / 8;
+                height: $tileHeight / 8;
+            }
+        }
     }
     &.devcard-container {
         position: relative;
@@ -161,13 +177,6 @@ div {
             display: inline-block;
             position: static;
         }
-    }
-    &.card {
-        @extend div.tile;
-
-        width: $tileWidth / 4;
-        height: $tileHeight / 4;
-        background-size: contain;
     }
     &.devcard {
         @extend div.card;
@@ -271,6 +280,8 @@ div {
         position: fixed;
         height: $playerBoxHeight;
         width: 30%;
+        z-index: 2;
+
         background-color: RGBA(255, 255, 255, 0.5);
 
         &.me { width: 100%; bottom: 0; }
@@ -290,7 +301,7 @@ div {
         z-index: 1;
 
         width: 100%;
-        padding: 300px;
+        padding: 0 300px;
 
         text-align: center;
 
@@ -319,7 +330,11 @@ div {
             &:focus { background-color: RGBA(255, 255, 255, 1); }
         }
         button {
-            &:hover { background-color: RGBA(255, 255, 255, 1); }
+            &:not(.not-clickable):hover { background-color: RGBA(255, 255, 255, 1); }
+            &.not-clickable {
+                pointer-events: none;
+                opacity: 0.5;
+            }
         }
     }
 
@@ -333,6 +348,31 @@ div {
         cursor: pointer;
     }
 }
+
+div {
+    &.trade-offer {
+        position: relative;
+        width: 600px;
+        height: 150px;
+
+        background-color: RGBA(255, 255, 255, 0.3);
+        @include border-radius(10px);
+
+        div.trade-left {
+            position: absolute;
+            left: 0;
+            right: 100px;
+            height: 100%;
+        }
+        button {
+            position: absolute;
+            right: 0;
+            height: 100px;
+            width: 100px;
+        }
+    }
+}
+
 div {
     &#chatbox_container {
         position: fixed;
@@ -418,6 +458,7 @@ div {
 
                 &#buy-dev-card {
                     top: 0px;
+                    line-height: 20px;
                 }
                 &#play-dev-card {
                     top: 50px;
@@ -441,7 +482,14 @@ span.spacer {
 
     vertical-align: bottom;
 }
-
+.va-middle {
+    display: inline-block !important;
+    vertical-align: middle;
+}
+span.va-middle {
+    height: 100%;
+    width: 0;
+}
 button#start_game {
     display: none;
 

@@ -34,13 +34,15 @@ export class Catan {
         });
         if(colors.length) {
             //Create the form out of what options are left
-            let overlay = $('#request_form')
-                .css('display', 'block');
-            let options = $('<div></div>')
-                .css({
-                    'margin': '0 auto',
-                    'text-align': 'center'
-                });
+            let options;
+            $('#request-overlay').css('display', 'block');
+            let overlay = $('#request-form')
+                .append(options = $('<div></div>')
+                    .css({
+                        'margin': '0 auto',
+                        'text-align': 'center'
+                    })
+                );
             colors.forEach((color) => {
                 let div = $('<div></div>')
                         .attr('class', 'color_selector')
@@ -50,12 +52,12 @@ export class Catan {
                         });
                 options.append(div);
             });
-            overlay.append(options);
         }
     }
     chooseColorHide() {
-        $('#request_form')
-            .css('display', 'none')
+        $('#request-overlay')
+            .css('display', 'none');
+        $('#request-form')
             .html("");
     }
 

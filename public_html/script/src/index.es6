@@ -135,18 +135,21 @@ let run = (function* () {
             arrange(data, player);
             switch(extra) {
                 case 'trade':
-                    yield trade.offerShow();
-                    let responses = [];
-                    while(responses.length < Object.keys(data.players).length - 1) {
-                        responses.push(yield trade.awaitResponses());
+                    [, data] = yield trade.offerShow(data);
+                    if(data.trade !== null) {
+                        let done = false;
+                        while(!done) {
+                            data = yield catan.awaitData();
+                            done = true;
+                            for(let name in data.players) {
+                                if(player !== name && data.players[name].response.trade === null) {
+                                    done = false;
+                                }
+                            }
+                        }
+                        [, data] = yield trade.offersShow(data);
                     }
-                    let which = yield trade.displayOffers(responses);
-                    if(which === false) {
-                        yield trade.reject();
-                    } else {
-                        data = yield trade.accept([responses, which]);
-                        arrange(data, player);
-                    }
+                    arrange(data, player);
                     break;
                 case CONST.YEAR_OF_PLENTY:
                     [, data] = yield devcard.yearOfPlenty();
@@ -184,8 +187,8 @@ let run = (function* () {
                 [data] = yield* robberDiscarding(data, player, robber);
                 arrange(data, player);
             }
-            if(data.trade === false) {
-                trade.respond(yield trade.counter());
+            if(data.trade !== null && data.players[player].response.trade === null) {
+                [, data] = yield trade.counter(data);
             }
             data = yield catan.awaitData();
         }

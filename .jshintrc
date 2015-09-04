@@ -2,6 +2,7 @@
     "globalstrict": true,
     "esnext": true,
     "elision": true,
+    "loopfunc": true,
     "globals": {
         "console": false,
         "require": false,
