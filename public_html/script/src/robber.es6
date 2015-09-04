@@ -26,7 +26,7 @@ export class Robber {
     }
     discardShow(discarded, data) {
         $('#request-overlay').css('display', 'block');
-        let form = $('#request-form')
+        $('#request-form')
             .append($('<h2></h2>')
                 .text('The robber takes half your cards!')
             )

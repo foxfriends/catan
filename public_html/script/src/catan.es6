@@ -36,7 +36,7 @@ export class Catan {
             //Create the form out of what options are left
             let options;
             $('#request-overlay').css('display', 'block');
-            let overlay = $('#request-form')
+            $('#request-form')
                 .append(options = $('<div></div>')
                     .css({
                         'margin': '0 auto',
