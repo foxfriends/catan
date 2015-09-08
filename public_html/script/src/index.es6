@@ -34,8 +34,12 @@ let robberDiscarding = function*(data, player, robber) {
 
 let run = (function* () {
     let catan = new Catan(run, socket);
-    socket.on('game:won', catan.end);
     let game, player, data;
+    socket.on('game:win', ([d, winner]) => {
+        data = d;
+        arrange(data, player);
+        catan.end(winner);
+    });
     while(!game) {
         //Keep going until accepted into a game
         [game, player] = yield catan.chooseGameFormShow();

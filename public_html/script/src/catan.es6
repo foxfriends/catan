@@ -113,11 +113,12 @@ export class Catan {
             });
     }
 
-    win() {
-        this[SOCKET].emit('game:win');
-    }
-
     end(winner) {
-
+        $('#request-overlay')
+            .css('display', 'block');
+        $('#request-form')
+            .append($('<h1></h1>')
+                .text(`${winner} wins!!!`)
+            );
     }
 }

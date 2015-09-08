@@ -2,7 +2,7 @@
 import {CONST} from './const.es6';
 import {default as $} from 'jquery';
 
-let countVPs = (data, player, your_name) => {
+export let countVPs = (data, player, your_name) => {
     let vps = 0;
     data.houses.forEach((row) => {
         row.forEach((house) => {

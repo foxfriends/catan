@@ -13,6 +13,7 @@ let data = {};
 
 let {CONST} = require('./public_html/script/src/const');
 let {adjacent} = require('./public_html/script/src/adjacent');
+let {countVPs} = require('./public_html/script/src/arrange');
 
 io.on('connection', (socket) => {
     let playerName, gameName;
@@ -123,8 +124,12 @@ io.on('connection', (socket) => {
             }
         }
         game.save(gameName, data[gameName]);
-        socket.broadcast.to(gameName).emit('game:data', data[gameName]);
-        res(null, data[gameName]);
+        if(countVPs(data[gameName], playerName, playerName) >= 10) {
+            socket.emit('game:win', data[gameName]);
+        } else {
+            socket.broadcast.to(gameName).emit('game:data', data[gameName]);
+            res(null, data[gameName]);
+        }
     });
     socket.on('game:roll', (x, res) => {
         let dice = [
@@ -181,23 +186,29 @@ io.on('connection', (socket) => {
             data[gameName].players[playerName].hand[CONST.RESOURCE][CONST.WOOD] -= 1;
             data[gameName].players[playerName].hand[CONST.RESOURCE][CONST.BRICK] -= 1;
         }
-        //THIS DOESNT WORK COME UP WITH SOMETHING BETTER
-        //Loops, 4 way forks, potentially 2 sections
+
         let check = (list) => {
-            console.log(list);
             let adj = adjacent(list[list.length - 1][0], list[list.length - 1][1], 'road', 'road');
-            let branch = [0, 0, 0];
+            let branch = [0, 0, 0, 0];
             let n = 0;
             outer:
             for(let [x, y] of adj) {
                 if(data[gameName].roads[x][y] === playerName) {
                     for(let [a, b] of list) {
+                        //If not in the list already
                         if(a === x && b === y) {
                             continue outer;
                         }
                     }
-                    console.log(x, y);
-                    branch[n++] = check([...list, [x,y]]);
+                    if(list.length >= 2) {
+                        for(let [a, b] of adjacent(x, y, 'road', 'road')) {
+                            //If on the same end of the road as the previous road
+                            if(a === list[list.length - 2][0] && b === list[list.length - 2][1]) {
+                                continue outer;
+                            }
+                        }
+                    }
+                    branch[n++] = check([...list, [x, y]]);
                 }
             }
             if(n === 0) {
@@ -211,20 +222,8 @@ io.on('connection', (socket) => {
         };
         for(let a = 0; a < data[gameName].roads.length; a++) {
             for(let b = 0; b < data[gameName].roads[a].length; b++) {
-                let adj = adjacent(a, b, 'road', 'road');
-                let start;
-                for(let [x, y] of adj) {
-                    if(data[gameName].roads[x][y] === playerName) {
-                        if(start === undefined) {
-                            start = [x, y];
-                        } else {
-                            start = undefined;
-                            break;
-                        }
-                    }
-                }
-                if(start !== undefined) {
-                    data[gameName].players[playerName].longestRoadCount = Math.max(data[gameName].players[playerName].longestRoadCount, check([start]));
+                if(data[gameName].roads[a][b] === playerName) {
+                    data[gameName].players[playerName].longestRoadCount = Math.max(data[gameName].players[playerName].longestRoadCount, check([[a,b]]));
                 }
             }
         }
@@ -294,7 +293,9 @@ io.on('connection', (socket) => {
                     }
                 }
             }
-            data[gameName].players[max].largestArmy = true;
+            if(max !== null) {
+                data[gameName].players[max].largestArmy = true;
+            }
         }
         socket.broadcast.to(gameName).emit('game:data', data[gameName]);
         res(null, data[gameName]);
