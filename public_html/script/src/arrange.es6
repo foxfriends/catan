@@ -2,6 +2,23 @@
 import {CONST} from './const.es6';
 import {default as $} from 'jquery';
 
+let countVPs = (data, player, your_name) => {
+    let vps = 0;
+    data.houses.forEach((row) => {
+        row.forEach((house) => {
+            if(house[1] === player) {
+                vps += house[0];
+            }
+        });
+    });
+    vps += data.players[player].longestRoad ? 2 : 0;
+    vps += data.players[player].largestArmy ? 2 : 0;
+    if(player === your_name) {
+        vps += data.players[player].hand[CONST.DEVELOPMENT][CONST.READY][CONST.VP];
+    }
+    return vps;
+};
+
 export let arrange = (data, your_name) => {
     $('.tile_row').each(function(i) {
         $(this).children('.tile').each(function(j) {
@@ -124,6 +141,7 @@ export let arrange = (data, your_name) => {
                 `<img src='image/devcard.png' width='20'>` +
                 data.players[name].hand[CONST.DEVELOPMENT].reduce((p, c) => p + c.reduce((p,c) => p + c, 0), 0)
             );
+            player.children('.points').html(`Road length: ${data.players[name].longestRoadCount} Knights: ${data.players[name].knights} Total VPs: ${countVPs(data, name, your_name)}`);
         } else {
             player = $('.player.me');
             player.children('.cards').html(
@@ -138,6 +156,7 @@ export let arrange = (data, your_name) => {
                 `<img src='image/roadbuilding.png' width='20'> ${data.players[name].hand[CONST.DEVELOPMENT][CONST.READY][CONST.ROAD_BUILDING] + data.players[name].hand[CONST.DEVELOPMENT][CONST.BOUGHT][CONST.ROAD_BUILDING]}` +
                 `<img src='image/yearofplenty.png' width='20'> ${data.players[name].hand[CONST.DEVELOPMENT][CONST.READY][CONST.YEAR_OF_PLENTY] + data.players[name].hand[CONST.DEVELOPMENT][CONST.BOUGHT][CONST.YEAR_OF_PLENTY]}`
             );
+            player.children('.points').html(`Road length: ${data.players[name].longestRoadCount} Knights: ${data.players[name].knights} Total VPs: ${countVPs(data, name, your_name)}`);
         }
         player
             .css({

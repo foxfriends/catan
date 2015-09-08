@@ -112,4 +112,12 @@ export class Catan {
                 this[GEN].next([null, [null, 'done']]);
             });
     }
+
+    win() {
+        this[SOCKET].emit('game:win');
+    }
+
+    end(winner) {
+
+    }
 }

@@ -226,8 +226,8 @@ export class Trade {
             .append($('<button></button>')
                 .text('Cancel')
                 .click(() => {
-                    this[GEN].next([null, data]);
                     this.hideOverlay();
+                    this[GEN].next([null, data]);
                 })
             );
 

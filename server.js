@@ -49,7 +49,11 @@ io.on('connection', (socket) => {
                     response: {
                         robber: null,
                         trade: null
-                    }
+                    },
+                    longestRoadCount: 0,
+                    knights: 0,
+                    largestArmy: false,
+                    longestRoad: false
                 };
             } else {
                 socket.leave(gameName);
@@ -177,6 +181,73 @@ io.on('connection', (socket) => {
             data[gameName].players[playerName].hand[CONST.RESOURCE][CONST.WOOD] -= 1;
             data[gameName].players[playerName].hand[CONST.RESOURCE][CONST.BRICK] -= 1;
         }
+        //THIS DOESNT WORK COME UP WITH SOMETHING BETTER
+        //Loops, 4 way forks, potentially 2 sections
+        let check = (list) => {
+            console.log(list);
+            let adj = adjacent(list[list.length - 1][0], list[list.length - 1][1], 'road', 'road');
+            let branch = [0, 0, 0];
+            let n = 0;
+            outer:
+            for(let [x, y] of adj) {
+                if(data[gameName].roads[x][y] === playerName) {
+                    for(let [a, b] of list) {
+                        if(a === x && b === y) {
+                            continue outer;
+                        }
+                    }
+                    console.log(x, y);
+                    branch[n++] = check([...list, [x,y]]);
+                }
+            }
+            if(n === 0) {
+                return list.length;
+            }
+            let max = 0;
+            while(--n >= 0) {
+                max = Math.max(branch[n], max);
+            }
+            return max;
+        };
+        for(let a = 0; a < data[gameName].roads.length; a++) {
+            for(let b = 0; b < data[gameName].roads[a].length; b++) {
+                let adj = adjacent(a, b, 'road', 'road');
+                let start;
+                for(let [x, y] of adj) {
+                    if(data[gameName].roads[x][y] === playerName) {
+                        if(start === undefined) {
+                            start = [x, y];
+                        } else {
+                            start = undefined;
+                            break;
+                        }
+                    }
+                }
+                if(start !== undefined) {
+                    data[gameName].players[playerName].longestRoadCount = Math.max(data[gameName].players[playerName].longestRoadCount, check([start]));
+                }
+            }
+        }
+
+        let max = null;
+        for(let player in data[gameName].players) {
+            if(data[gameName].players[player].longestRoad) {
+                data[gameName].players[player].longestRoad = false;
+                max = player;
+                break;
+            }
+        }
+        for(let player in data[gameName].players) {
+            if(data[gameName].players[player].longestRoadCount >= 5) {
+                if(max === null || data[gameName].players[player].longestRoadCount > data[gameName].players[max].longestRoadCount) {
+                    max = player;
+                }
+            }
+        }
+        if(max !== null) {
+            data[gameName].players[max].longestRoad = true;
+        }
+
         socket.broadcast.to(gameName).emit('game:data', data[gameName]);
         res(null, [data[gameName], [i, j]]);
     });
@@ -205,6 +276,26 @@ io.on('connection', (socket) => {
     });
     socket.on('devcard:play', (which, res) => {
         data[gameName].players[playerName].hand[CONST.DEVELOPMENT][CONST.READY][which] -= 1;
+        if(which === CONST.KNIGHT) {
+            data[gameName].players[playerName].knights++;
+            //Calculate the largest army
+            let max = null;
+            for(let p in data[gameName].players) {
+                if(data[gameName].players[p].largestArmy) {
+                    data[gameName].players[p].largestArmy = false;
+                    max = p;
+                    break;
+                }
+            }
+            for(let p in data[gameName].players) {
+                if(data[gameName].players[p].knights >= 3) {
+                    if(max === null || data[gameName].players[p].knights > data[gameName].players[max].knights) {
+                        max = p;
+                    }
+                }
+            }
+            data[gameName].players[max].largestArmy = true;
+        }
         socket.broadcast.to(gameName).emit('game:data', data[gameName]);
         res(null, data[gameName]);
     });

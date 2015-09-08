@@ -4,6 +4,10 @@ require('../../style/src/main.scss');
 
 import {default as io} from 'socket.io-client';
 let socket = io();
+socket.on('error', (e) => {
+    console.error(e);
+    showAlert(e, 'error');
+});
 
 import {CONST} from './const.es6';
 import {Build} from './build.es6';
@@ -30,6 +34,7 @@ let robberDiscarding = function*(data, player, robber) {
 
 let run = (function* () {
     let catan = new Catan(run, socket);
+    socket.on('game:won', catan.end);
     let game, player, data;
     while(!game) {
         //Keep going until accepted into a game

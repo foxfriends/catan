@@ -112,7 +112,11 @@ class Game {
                     response: {
                         robber: null,
                         trade: null
-                    }
+                    },
+                    longestRoadCount: 1,
+                    knights: 0,
+                    largestArmy: false,
+                    longestRoad: false
                 }
                 */
             },
