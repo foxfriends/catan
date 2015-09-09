@@ -18,6 +18,8 @@ import {Catan} from './catan.es6';
 import {arrange} from './arrange.es6';
 import {showAlert} from './alert.es6';
 
+//Catan game runner
+
 let robberDiscarding = function*(data, player, robber) {
     let cardCount = data.players[player].hand[CONST.RESOURCE].reduce((p, c) => p + c, 0);
     let discarded = [];
@@ -204,3 +206,10 @@ let run = (function* () {
     }
 })();
 run.next();
+
+
+//Chatbox
+
+
+
+//Playlist
