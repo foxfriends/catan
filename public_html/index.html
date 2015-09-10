@@ -261,12 +261,12 @@
                 </div>
             </div>
         </div>
-        <div id="chatbox_container"><span class="spacer"></span><div id="chatbox"></div></div>
+        <div id="chatbox-container"><div id="messages-container"><div id="chatbox-messages"></div></div><input id="chatbox-input" placeholder="Press <enter> to chat..."></div>
         <div class="overlay" id="start_form">
             <span class="va-middle"></span>
             <form action="#" onsubmit="return false;" class="va-middle">
-                <input type="text" name="game" id="game_name" placeholder="Game name" autocomplete="off" required>
-                <input type="text" name="name" id="your_name" placeholder="Your name" autocomplete="off" required>
+                <input type="text" name="game" id="game_name" placeholder="Game name" autocomplete="off" required tabindex="1">
+                <input type="text" name="name" id="your_name" placeholder="Your name" autocomplete="off" required tabindex="2">
                 <button>Start game</button>
             </form>
             <div id="start_form_error"></div>

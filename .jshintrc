@@ -7,6 +7,7 @@
         "console": false,
         "require": false,
         "module": false,
-        "window": false
+        "window": false,
+        "document": false
     }
 }

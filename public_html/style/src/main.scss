@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Lato:400,700);
+@import url(http://fonts.googleapis.com/css?family=Lato:300,700);
 
 $tileWidth: 200px;
 $tileHeight: 231px;
@@ -33,6 +33,12 @@ $playerBoxHeight: 75px;
     margin: 0;
     overflow: visible;
     font-family: "Lato",sans-serif;
+}
+div.container {
+    position: relative;
+    overflow: visible;
+    min-width: 100%;
+    min-height: 100%;
 }
 
 body {
@@ -97,7 +103,7 @@ span.number {
     text-align: center;
     font-family: "Lato";
     font-weight: 700;
-    font-size: 30px;
+    font-size: 28px;
     line-height: $numberCircleSize;
 
     border: 1px $numberCircleColor outset;
@@ -373,50 +379,61 @@ div {
     }
 }
 
-div {
-    &#chatbox_container {
-        position: fixed;
-        left: 0;
-        bottom: 116px;
-        width: 500px;
-        height: 32px;
+div#chatbox-container {
+    position: fixed;
+    left: 0;
+    bottom: 116px;
 
+    width: 500px;
+    height: 500px;
+    max-height: 32px;
+
+    color: white;
+    background-color: RGBA(0, 0, 0, 0.3);
+
+    word-wrap: break-word;
+
+    #messages-container {
+        display: block;
+
+        position: absolute;
+        top: 0;
+        bottom: 32px;
+        width: 100%;
         overflow: hidden;
 
-        color: white;
-        background-color: RGBA(0, 0, 0, 0.3);
+        .message {
+            padding: 3px 5px;
+            border-bottom: 1px solid RGBA(150, 150, 150, 0.5);
 
-        vertical-align: bottom;
-
-        #chatbox {
-            display: inline-block;
-
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-
-            p {
-                min-height: 32px;
-
-                &:nth-of-type(2n) {
-                    background-color: RGBA(255, 255, 255, 0.3);
-                }
+            .chatbox-author {
+                font-weight: bold;
+                margin-right: 15px;
             }
-            input {
-                display: block;
 
-                height: 32px;
-                width: 100%;
-
-                border: none;
-
-                background-color: RGBA(255, 255, 255, 0.6);
-                color: black;
-            }
         }
     }
+    #chatbox-input {
+        box-sizing: border-box;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        padding: 0 5px;
+        width: 100%;
+        height: 32px;
 
+        border: none;
+        background-color: RGBA(255, 255, 255, 0.3);
 
+        pointer-events: none;
+
+        &:focus {
+            border-top: 1px solid white;
+        }
+    }
+}
+
+div {
     &#dice {
         position: fixed;
         left: 14px;
@@ -431,8 +448,6 @@ div {
         top: 203px;
 
         div.container {
-            position: relative;
-            overflow: visible;
             width: 160px;
 
             div {

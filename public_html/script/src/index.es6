@@ -2,12 +2,16 @@
 require('babel/polyfill');
 require('../../style/src/main.scss');
 
+import {default as $} from 'jquery';
 import {default as io} from 'socket.io-client';
+
 let socket = io();
 socket.on('error', (e) => {
     console.error(e);
     showAlert(e, 'error');
 });
+
+import {chat} from './chatbox.es6';
 
 import {CONST} from './const.es6';
 import {Build} from './build.es6';
@@ -207,9 +211,7 @@ let run = (function* () {
 })();
 run.next();
 
-
-//Chatbox
-
-
+//Chat
+$(document).keydown(chat(socket));
 
 //Playlist

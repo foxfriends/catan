@@ -426,4 +426,14 @@ io.on('connection', (socket) => {
             }
         }
     });
+
+
+    //Chat
+    socket.on('chat:post', (msg) => {
+        io.to(gameName).emit('chat:message', {
+            body: msg,
+            author: playerName,
+            time: Date.now()
+        });
+    });
 });
