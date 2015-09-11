@@ -48,6 +48,7 @@ body {
 
     background-image: url("/image/water_tiled.png");
     background-position: 0 100px;
+    overflow-x: hidden;
 }
 
 div#alert {
@@ -130,8 +131,9 @@ div {
     &.forest, &.wood { background-image: url("/image/wood.png"); }
     &.quarry, &.brick { background-image: url("/image/brick.png"); }
     &.mountain, &.ore { background-image: url("/image/ore.png"); }
-    &.desert, &.any { background-image: url("/image/desert.png"); }
+    &.desert { background-image: url("/image/desert.png"); }
     &.water { background-image: url("/image/water.png"); }
+    &.any {background-image: url("/image/any.png"); }
 }
 
 div {
@@ -186,18 +188,20 @@ div {
     }
     &.devcard {
         @extend div.card;
+        width: ($tileHeight / 4) * (64px / 96px);
+        background-repeat: no-repeat;
 
         &.monopoly {
             left: 0;
-            background-color: red;
+            background-image: url("/image/monopoly.png");
         }
         &.road-building {
             left: $tileWidth / 4;
-            background-color: blue;
+            background-image: url("/image/road_building.png");
         }
         &.year-of-plenty {
             left: $tileWidth / 2;
-            background-color: green;
+            background-image: url("/image/year_of_plenty.png");
         }
     }
 }
@@ -247,7 +251,8 @@ div {
     }
 }
 
-div {
+div.houses {
+    z-index: 1;
     &.house {
         position: absolute;
         left: 0;
@@ -281,19 +286,22 @@ div {
         @include transition(width 0.5s);
     }
 }
-div {
-    &.player {
-        position: fixed;
-        height: $playerBoxHeight;
-        width: 30%;
-        z-index: 2;
+div.player {
+    position: fixed;
+    height: $playerBoxHeight;
+    width: 30%;
+    z-index: 2;
 
-        background-color: RGBA(255, 255, 255, 0.5);
+    background-color: RGBA(255, 255, 255, 0.5);
 
-        &.me { width: 100%; bottom: 0; }
-        &:not(.me) { top: 0; }
+    &.me { width: 100%; bottom: 0; }
+    &:not(.me) { top: 0; }
+
+    &.robber-trouble {
+        border: 2px solid red !important;
     }
 }
+
 div {
     &.overlay {
         box-sizing: border-box;
@@ -381,7 +389,7 @@ div {
 
 div#chatbox-container {
     position: fixed;
-    left: 0;
+    right: 0;
     bottom: 116px;
 
     width: 500px;
@@ -392,6 +400,7 @@ div#chatbox-container {
     background-color: RGBA(0, 0, 0, 0.3);
 
     word-wrap: break-word;
+    pointer-events: none;
 
     #messages-container {
         display: block;
@@ -410,7 +419,9 @@ div#chatbox-container {
                 font-weight: bold;
                 margin-right: 15px;
             }
-
+            .chatbox-timestamp {
+                font-size: 12px;
+            }
         }
     }
     #chatbox-input {
@@ -424,8 +435,6 @@ div#chatbox-container {
 
         border: none;
         background-color: RGBA(255, 255, 255, 0.3);
-
-        pointer-events: none;
 
         &:focus {
             border-top: 1px solid white;

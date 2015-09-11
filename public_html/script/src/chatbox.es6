@@ -9,6 +9,10 @@ let input = $('#chatbox-input');
 let chatting = false, timeout;
 
 let close = () => {
+    if(timeout) {
+        window.clearTimeout(timeout);
+        timeout = undefined;
+    }
     container
         .css('max-height', `${32 + $('.message').last().innerHeight()}px`);
     msgContainer
@@ -17,6 +21,11 @@ let close = () => {
 };
 
 let half = () => {
+    if(timeout) {
+        window.clearTimeout(timeout);
+        timeout = undefined;
+    }
+    timeout = window.setTimeout(close, 6000);
     container
         .css('max-height', '250px');
     msgContainer.scrollTop(messages.height())
@@ -24,6 +33,10 @@ let half = () => {
 };
 
 let full = () => {
+    if(timeout) {
+        window.clearTimeout(timeout);
+        timeout = undefined;
+    }
     container
         .css('max-height', '500px');
     msgContainer.scrollTop(messages.height())
@@ -78,7 +91,7 @@ let allow = () => {
         .off('focus')
         .focus()
         .blur(function() {
-            close();
+            half();
             chatting = false;
         })
         .css('pointer-events', 'default');
@@ -87,13 +100,8 @@ let allow = () => {
 export let chat = (socket) => {
     socket.on('chat:message', (msg) => {
         add(msg);
-        if(timeout) {
-            window.clearTimeout(timeout);
-            timeout = undefined;
-        }
         if(!chatting) {
             half();
-            timeout = window.setTimeout(close, 6000);
         }
     });
     return (e) => {
@@ -112,19 +120,10 @@ export let chat = (socket) => {
                 send(socket);
                 disallow();
                 half();
-                if(timeout) {
-                    window.clearTimeout(timeout);
-                    timeout = undefined;
-                }
-                timeout = window.setTimeout(close, 6000);
             } else {
                 chatting = true;
                 full();
                 allow();
-                if(timeout) {
-                    window.clearTimeout(timeout);
-                    timeout = undefined;
-                }
             }
         }
     };

@@ -136,7 +136,7 @@ export let arrange = (data, your_name) => {
         if(name !== your_name) {
             player = $(`.player`).eq(n++);
             player.children('.cards').html(
-                `<img src='image/resourcecard.png' width='20'>` +
+                `<img src='image/any.png' width='20'>` +
                 data.players[name].hand[CONST.RESOURCE].reduce((p, c) => p + c, 0) +
                 `<img src='image/devcard.png' width='20'>` +
                 data.players[name].hand[CONST.DEVELOPMENT].reduce((p, c) => p + c.reduce((p,c) => p + c, 0), 0)
@@ -151,10 +151,10 @@ export let arrange = (data, your_name) => {
                 `<img src='image/brick.png' width='20'> ${data.players[name].hand[CONST.RESOURCE][CONST.BRICK]}` +
                 `<img src='image/ore.png' width='20'> ${data.players[name].hand[CONST.RESOURCE][CONST.ORE]}` +
                 `<img src='image/knight.png' width='20'> ${data.players[name].hand[CONST.DEVELOPMENT][CONST.READY][CONST.KNIGHT] + data.players[name].hand[CONST.DEVELOPMENT][CONST.BOUGHT][CONST.KNIGHT]}` +
-                `<img src='image/vpcard.png' width='20'> ${data.players[name].hand[CONST.DEVELOPMENT][CONST.READY][CONST.VP] + data.players[name].hand[CONST.DEVELOPMENT][CONST.BOUGHT][CONST.VP]}` +
+                `<img src='image/vp.png' width='20'> ${data.players[name].hand[CONST.DEVELOPMENT][CONST.READY][CONST.VP] + data.players[name].hand[CONST.DEVELOPMENT][CONST.BOUGHT][CONST.VP]}` +
                 `<img src='image/monopoly.png' width='20'> ${data.players[name].hand[CONST.DEVELOPMENT][CONST.READY][CONST.MONOPOLY] + data.players[name].hand[CONST.DEVELOPMENT][CONST.BOUGHT][CONST.MONOPOLY]}` +
-                `<img src='image/roadbuilding.png' width='20'> ${data.players[name].hand[CONST.DEVELOPMENT][CONST.READY][CONST.ROAD_BUILDING] + data.players[name].hand[CONST.DEVELOPMENT][CONST.BOUGHT][CONST.ROAD_BUILDING]}` +
-                `<img src='image/yearofplenty.png' width='20'> ${data.players[name].hand[CONST.DEVELOPMENT][CONST.READY][CONST.YEAR_OF_PLENTY] + data.players[name].hand[CONST.DEVELOPMENT][CONST.BOUGHT][CONST.YEAR_OF_PLENTY]}`
+                `<img src='image/road_building.png' width='20'> ${data.players[name].hand[CONST.DEVELOPMENT][CONST.READY][CONST.ROAD_BUILDING] + data.players[name].hand[CONST.DEVELOPMENT][CONST.BOUGHT][CONST.ROAD_BUILDING]}` +
+                `<img src='image/year_of_plenty.png' width='20'> ${data.players[name].hand[CONST.DEVELOPMENT][CONST.READY][CONST.YEAR_OF_PLENTY] + data.players[name].hand[CONST.DEVELOPMENT][CONST.BOUGHT][CONST.YEAR_OF_PLENTY]}`
             );
             player.children('.points').html(`Road length: ${data.players[name].longestRoadCount} Knights: ${data.players[name].knights} Total VPs: ${countVPs(data, name, your_name)}`);
         }
@@ -164,6 +164,11 @@ export let arrange = (data, your_name) => {
                 'background-color': colors[data.players[name].color]
             })
             .children('.name').text(name);
+        if(data.dice[0] + data.dice[1] === 7 && !data.players[name].response.robber && data.rolled) {
+            player.addClass('robber-trouble');
+        } else {
+            player.removeClass('robber-trouble');
+        }
         $('#buy-dev-card,#play-dev-card,#init-trade,#end-turn').css('display', 'none').off('click');
         // Points
         // Prizes

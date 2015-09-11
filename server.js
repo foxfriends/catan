@@ -125,7 +125,8 @@ io.on('connection', (socket) => {
         }
         game.save(gameName, data[gameName]);
         if(countVPs(data[gameName], playerName, playerName) >= 10) {
-            socket.emit('game:win', data[gameName]);
+            io.to(gameName).emit('game:win', [data[gameName], playerName]);
+            console.log(`${playerName} has won ${gameName}`);
         } else {
             socket.broadcast.to(gameName).emit('game:data', data[gameName]);
             res(null, data[gameName]);
@@ -252,7 +253,7 @@ io.on('connection', (socket) => {
     });
     socket.on('build:city', ([i, j], res) => {
         data[gameName].houses[i][j][0] = 2;
-        data[gameName].players[playerName].hand[CONST.RESOURCE][CONST.ROCK] -= 3;
+        data[gameName].players[playerName].hand[CONST.RESOURCE][CONST.ORE] -= 3;
         data[gameName].players[playerName].hand[CONST.RESOURCE][CONST.WHEAT] -= 2;
         socket.broadcast.to(gameName).emit('game:data', data[gameName]);
         res(null, [data[gameName], [i, j]]);
