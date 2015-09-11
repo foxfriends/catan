@@ -251,9 +251,8 @@ div {
     }
 }
 
-div.houses {
-    z-index: 1;
-    &.house {
+div#houses {
+    .house {
         position: absolute;
         left: 0;
         top: 0;
@@ -281,7 +280,7 @@ div.houses {
             border-bottom: 16px solid;
         }
     }
-    &.city {
+    .city {
         width: 48px;
         @include transition(width 0.5s);
     }
@@ -301,66 +300,63 @@ div.player {
         border: 2px solid red !important;
     }
 }
+div.overlay {
+    box-sizing: border-box;
+    display: none;
 
-div {
-    &.overlay {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+
+    width: 100%;
+    padding: 0 300px;
+
+    text-align: center;
+
+    background-color: RGBA(0, 0, 0, 0.9);
+    color: white;
+
+    input, button {
         box-sizing: border-box;
-        display: none;
+        display: block;
 
-        position: fixed;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        z-index: 1;
+        width: 500px;
+        height: 32px;
+        margin: 4px auto;
+        padding: 2px;
 
-        width: 100%;
-        padding: 0 300px;
+        font-size: 20px;
 
-        text-align: center;
+        background-color: RGBA(255, 255, 255, 0.8);
 
-        background-color: RGBA(0, 0, 0, 0.9);
-        color: white;
+        border: 2px solid #DDDDDD;
+        border-radius: 3px;
 
-        input, button {
-            box-sizing: border-box;
-            display: block;
+        &[type='file'] { padding: 0; }
+        &[type='number'] { display: inline-block; width: 50px; }
 
-            width: 500px;
-            height: 32px;
-            margin: 4px auto;
-            padding: 2px;
-
-            font-size: 20px;
-
-            background-color: RGBA(255, 255, 255, 0.8);
-
-            border: 2px solid #DDDDDD;
-            border-radius: 3px;
-
-            &[type='file'] { padding: 0; }
-            &[type='number'] { display: inline-block; width: 50px; }
-
-            &:focus { background-color: RGBA(255, 255, 255, 1); }
-        }
-        button {
-            &:not(.not-clickable):hover { background-color: RGBA(255, 255, 255, 1); }
-            &.not-clickable {
-                pointer-events: none;
-                opacity: 0.5;
-            }
+        &:focus { background-color: RGBA(255, 255, 255, 1); }
+    }
+    button {
+        &:not(.not-clickable):hover { background-color: RGBA(255, 255, 255, 1); }
+        &.not-clickable {
+            pointer-events: none;
+            opacity: 0.5;
         }
     }
+}
 
-    &.color_selector {
-        display: inline-block;
+div.color_selector {
+    display: inline-block;
 
-        width: 100px;
-        height: 100px;
-        margin: 16px;
+    width: 100px;
+    height: 100px;
+    margin: 16px;
 
-        cursor: pointer;
-    }
+    cursor: pointer;
 }
 
 div {
