@@ -142,16 +142,18 @@ io.on('connection', (socket) => {
         if(dice[0] + dice[1] !== 7) {
             for(let i = 0; i < data[gameName].tiles.length; i++) {
                 for(let j = 0; j < data[gameName].tiles[i].length; j++) {
-                    if(data[gameName].tiles[i][j][1] == dice[0] + dice[1]) {
-                        let adj = adjacent(i, j, 'tile', 'house');
-                        adj.forEach((house) => {
-                            if(data[gameName].houses[house[0]][house[1]][0]) {
-                                let houseOwner = data[gameName].houses[house[0]][house[1]][1];
-                                let resourceType = data[gameName].tiles[i][j][0];
-                                let quantity = data[gameName].houses[house[0]][house[1]][0];
-                                data[gameName].players[houseOwner].hand[CONST.RESOURCE][resourceType] += quantity;
-                            }
-                        });
+                    if(data[gameName].robber[0] !== i && data[gameName].robber[1] !== j) {
+                        if(data[gameName].tiles[i][j][1] == dice[0] + dice[1]) {
+                            let adj = adjacent(i, j, 'tile', 'house');
+                            adj.forEach((house) => {
+                                if(data[gameName].houses[house[0]][house[1]][0]) {
+                                    let houseOwner = data[gameName].houses[house[0]][house[1]][1];
+                                    let resourceType = data[gameName].tiles[i][j][0];
+                                    let quantity = data[gameName].houses[house[0]][house[1]][0];
+                                    data[gameName].players[houseOwner].hand[CONST.RESOURCE][resourceType] += quantity;
+                                }
+                            });
+                        }
                     }
                 }
             }
