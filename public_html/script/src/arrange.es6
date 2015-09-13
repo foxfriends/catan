@@ -75,20 +75,11 @@ export let arrange = (data, your_name) => {
                     top: `${174 * i / 2 + 231 / 12}px`
                 }
             )
-            .css(
-                //Color
-                data.roads[i][j] !== -1 ? {
-                    'background-color': data.players[data.roads[i][j]].color,
-                    opacity: 1
-                } : {
-                    opacity: 0
-                }
-            )
-            .css({
-                'pointer-events': 'none',
-                cursor: 'default'
-            })
+            .removeClass('buildable')
             .off('click');
+            if(data.roads[i][j] !== -1) {
+                $(this).css('background-color', data.players[data.roads[i][j]].color);
+            }
         });
     });
 
@@ -101,22 +92,16 @@ export let arrange = (data, your_name) => {
                         `${(174 * i + (231 / 6 + 16) * ((j + 1) % 2)) - 16}px` :
                         `${(174 * i + (231 / 6 + 16) * (j % 2)) - 16}px`
                     })
-                .css(
-                    //Color
-                    data.houses[i][j][0] !== 0 ? {
+                    .removeClass('buildable')
+                    .removeClass('targetable')
+                    .off('click');
+                if(data.houses[i][j][0] !== 0) {
+                    $(this).css({
                         'background-color': data.players[data.houses[i][j][1]].color,
+                        'border-bottom-color': data.players[data.houses[i][j][1]].color,
                         color: data.players[data.houses[i][j][1]].color,
-                        opacity: 1
-                    } : {
-                        opacity: 0
-                    }
-                )
-                .css({
-                    'pointer-events': 'none',
-                    cursor: 'default',
-                    border: 'none'
-                })
-                .off('click');
+                    })
+                }
             if(data.houses[i][j][0] === 2) {
                 $(this).addClass('city');
             } else {

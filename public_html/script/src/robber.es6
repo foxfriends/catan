@@ -181,11 +181,7 @@ export class Robber {
                 if(data.players[data.houses[target[0]][target[1]][1]].hand[CONST.RESOURCE].reduce((p, c) => p + c, 0)) {
                     skip = false;
                     $('.house_row').eq(target[0]).children('.house').eq(target[1])
-                        .css({
-                            'pointer-events': 'auto',
-                            cursor: 'pointer',
-                            border: '3px solid #AAA'
-                        })
+                        .addClass('targetable')
                         .click(() => {
                             this.steal(data.houses[target[0]][target[1]][1], data);
                         });
@@ -202,10 +198,7 @@ export class Robber {
         let adj = adjacent(data.robber[0], data.robber[1], 'tile', 'house');
         adj.forEach((target) => {
             $('.house_row').eq(target[0]).children('.house').eq(target[1])
-                .css({
-                    cursor: 'default',
-                    border: 'none',
-                })
+                .removeClass('targetable')
                 .off('click');
         });
     }

@@ -10,6 +10,9 @@ socket.on('error', (e) => {
     console.error(e);
     showAlert(e, 'error');
 });
+socket.on('notification', (m) => {
+    showAlert(m, 'notification');
+});
 
 import {chat} from './chatbox.es6';
 

@@ -53,7 +53,7 @@ body {
 
 div#alert {
     position: fixed;
-    top: 50px;
+    top: $playerBoxHeight + 16px;
     left: 50px;
     right: 50px;
     z-index: 5;
@@ -71,13 +71,18 @@ div#alert {
 
     &.error {
         opacity: 1;
-        border: 1px solid rgb(74, 20, 20);
-        background-color: rgb(233, 196, 196)
+        border: 1px solid rgba(74, 20, 20, 0.8);
+        background-color: rgba(233, 196, 196, 0.8)
     }
     &.success {
         opacity: 1;
-        border: 1px solid rgb(27, 147, 27);
-        background-color: rgb(198, 241, 198)
+        border: 1px solid rgba(27, 147, 27, 0.8);
+        background-color: rgba(198, 241, 198, 0.8)
+    }
+    &.notification {
+        opacity: 1;
+        border: 1px solid rgba(140, 140, 140, 0.8);
+        background-color: rgba(220, 220, 220, 0.8)
     }
 }
 
@@ -220,21 +225,30 @@ div {
     }
 }
 
-div {
-    &.road {
+div#roads {
+    .road {
         position: absolute;
         left: 0;
         top: 0;
         width: 100px;
         height: 16px;
 
-        opacity: 0;
-        background-color: black;
+        background-color: RGBA(0,0,0,0);
 
-        @include transition(opacity 0.5s);
+        @include transition(background-color 0.5s);
+
+        cursor: default;
+        pointer-events: none;
+
+        &.buildable {
+            background-color: RGBA(0,0,0, 0.5);
+
+            cursor: pointer;
+            pointer-events: auto;
+        }
     }
 
-    &.road_row {
+    .road_row {
         &.long {
             div.road {
                 &:nth-child(2n) { transform: rotate(30deg); }
@@ -249,6 +263,7 @@ div {
             div.road { transform: rotate(90deg) translate(-8px, 0); }
         }
     }
+
 }
 
 div#houses {
@@ -259,10 +274,10 @@ div#houses {
         width: 32px;
         height: 32px;
 
-        opacity: 0;
-        background-color: black;
+        background-color: RGBA(0,0,0,0);
+        color: RGBA(0,0,0,0);
 
-        @include transition(opacity 0.5s);
+        @include transition(background-color 0.5s);
 
         &::before {
             box-sizing: border-box;
@@ -278,11 +293,28 @@ div#houses {
             border-right: 16px solid transparent;
             border-left: 16px solid transparent;
             border-bottom: 16px solid;
+            @include transition(color 0.5s, border-bottom-color 0.5s);
         }
     }
     .city {
         width: 48px;
         @include transition(width 0.5s);
+        &.buildable {
+            border: 2px solid black;
+        }
+    }
+    .buildable {
+        background-color: RGBA(0,0,0,0.5);
+        color: RGBA(0,0,0,0.5);
+
+        cursor: pointer;
+        pointer-events: auto;
+    }
+    .targetable {
+        border: 3px solid #AAA;
+
+        cursor: pointer;
+        pointer-events: auto;
     }
 }
 div.player {

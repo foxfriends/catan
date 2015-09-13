@@ -59,12 +59,7 @@ export class Build {
                         //Don't allow if there is a house too close
                         if(n === adj_house.length) {
                             $('.house_row').eq(i).children('.house').eq(j)
-                                .css({
-                                    'pointer-events': 'auto',
-                                    'background-color': 'black',
-                                    opacity: 0.5,
-                                    cursor: 'pointer'
-                                })
+                                .addClass('buildable')
                                 .off('click')
                                 .click(() => {
                                     this.house(i, j, data);
@@ -79,13 +74,9 @@ export class Build {
         for(let i = 0; i < data.houses.length; i++) {
             for(let j = 0; j < data.houses[i].length; j++) {
                 //Hide each house that's not built and remove the onclick handler
-                let house = $('.house_row').eq(i).children('.house').eq(j).off('click');
-                if(data.houses[i][j][0] === 0) {
-                    house.css({
-                        opacity: 0,
-                        cursor: 'default'
-                    });
-                }
+                let house = $('.house_row').eq(i).children('.house').eq(j)
+                    .off('click')
+                    .removeClass('buildable');
             }
         }
     }
@@ -132,12 +123,7 @@ export class Build {
                 for(let [i, j] of roads) {
                     if(data.roads[i][j] === -1) {
                         $('.road_row').eq(i).children('.road').eq(j)
-                            .css({
-                                'pointer-events': 'auto',
-                                'background-color': 'black',
-                                opacity: 0.5,
-                                cursor: 'pointer'
-                            })
+                            .addClass('buildable')
                             .off('click')
                             .click(() => {
                                 this.road(i, j, free, data);
@@ -158,12 +144,7 @@ export class Build {
                             }
                             if(n !== roads.length) {
                                 $('.road_row').eq(i).children('.road').eq(j)
-                                    .css({
-                                        'pointer-events': 'auto',
-                                        'background-color': 'black',
-                                        opacity: 0.5,
-                                        cursor: 'pointer'
-                                    })
+                                    .addClass('buildable')
                                     .off('click')
                                     .click(() => {
                                         this.road(i, j, free, data);
@@ -179,13 +160,9 @@ export class Build {
         for(let i = 0; i < data.roads.length; i++) {
             for(let j = 0; j < data.roads[j].length; j++) {
                 //Hide each road that's not built and remove the onclick handler
-                let road = $('.road_row').eq(i).children('.road').eq(j).off('click');
-                if(data.roads[i][j] === -1) {
-                    road.css({
-                        opacity: 0,
-                        cursor: 'default'
-                    });
-                }
+                let road = $('.road_row').eq(i).children('.road').eq(j)
+                    .off('click')
+                    .removeClass('buildable');
             }
         }
     }
@@ -213,13 +190,7 @@ export class Build {
                 for(let j = 0; j < data.houses[i].length; j++) {
                     if(data.houses[i][j][0] === 1 && data.houses[i][j][1] === this[PLAYER]) {
                         $(".house_row").eq(i).children(".house").eq(j)
-                            .css({
-                                'pointer-events': 'auto',
-                                'background-color': data.players[this[PLAYER]].color,
-                                opacity: 0.5,
-                                cursor: 'pointer',
-                                border: '2px solid black'
-                            })
+                            .addClass('buildable city')
                             .click(() => {
                                 this.city(i, j, data);
                             });
@@ -233,11 +204,7 @@ export class Build {
             for(let j = 0; j < data.houses[i].length; j++) {
                 $(".house_row").eq(i).children(".house").eq(j)
                     .off('click')
-                    .css({
-                        opacity: data.houses[i][j][0] === 0 ? 0 : 1,
-                        border: 'none',
-                        cursor: 'default'
-                    });
+                    .removeClass('buildable');
             }
         }
     }

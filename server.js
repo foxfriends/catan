@@ -274,11 +274,14 @@ io.on('connection', (socket) => {
             err = "There are no more development cards";
         }
         socket.broadcast.to(gameName).emit('game:data', data[gameName]);
+        socket.broadcast.to(gameName).emit('notification', `${playerName} bought a development card`);
         res(err, [data[gameName], c !== undefined ? ['Knight','VP','Monopoly','Road Building','Year Of Plenty'][c] : '']);
     });
     socket.on('devcard:play', (which, res) => {
         data[gameName].players[playerName].hand[CONST.DEVELOPMENT][CONST.READY][which] -= 1;
+        let cardName;
         if(which === CONST.KNIGHT) {
+            cardName = 'Knight';
             data[gameName].players[playerName].knights++;
             //Calculate the largest army
             let max = null;
@@ -299,7 +302,14 @@ io.on('connection', (socket) => {
             if(max !== null) {
                 data[gameName].players[max].largestArmy = true;
             }
+        } else if(which === CONST.YEAR_OF_PLENTY) {
+            cardName = 'Year of Plenty';
+        } else if(which === CONST.ROAD_BUILDING) {
+            cardName = 'Road Building';
+        } else if(which === CONST.MONOPOLY) {
+            cardName = 'Monopoly';
         }
+        socket.broadcast.to(gameName).emit('notification', `${playerName} played a ${cardName} card`);
         socket.broadcast.to(gameName).emit('game:data', data[gameName]);
         res(null, data[gameName]);
     });
@@ -310,12 +320,16 @@ io.on('connection', (socket) => {
                 data[gameName].players[player].hand[CONST.RESOURCE][which] = 0;
             }
         }
+        let resourceName = ['Wool', 'Wheat', 'Wood', 'Brick', 'Ore'];
+        socket.broadcast.to(gameName).emit('notification', `${playerName} played a ${resourceName[which]} card`);
         socket.broadcast.to(gameName).emit('game:data', data[gameName]);
         res(null, data[gameName]);
     });
     socket.on('devcard:plenty', (which, res) => {
         data[gameName].players[playerName].hand[CONST.RESOURCE][which[0]] += 1;
         data[gameName].players[playerName].hand[CONST.RESOURCE][which[1]] += 1;
+        let resourceName = ['Wool', 'Wheat', 'Wood', 'Brick', 'Ore'];
+        socket.broadcast.to(gameName).emit('notification', `${playerName} took a ${resourceName[which[0]]} and a ${resourceName[which[1]]}`);
         socket.broadcast.to(gameName).emit('game:data', data[gameName]);
         res(null, data[gameName]);
     });
@@ -340,6 +354,7 @@ io.on('connection', (socket) => {
         } while(data[gameName].players[target].hand[CONST.RESOURCE][r] < 1);
         data[gameName].players[target].hand[CONST.RESOURCE][r]--;
         data[gameName].players[playerName].hand[CONST.RESOURCE][r]++;
+        socket.broadcast.to(gameName).emit('notification', `${playerName} steals from ${target}`);
         socket.broadcast.to(gameName).emit('game:data', data[gameName]);
         res(null, data[gameName]);
     });
@@ -400,6 +415,7 @@ io.on('connection', (socket) => {
             data[gameName].players[playerName].hand[CONST.RESOURCE][c] += offer.get[c];
             data[gameName].players[playerName].hand[CONST.RESOURCE][c] -= offer.give[c];
         }
+        socket.broadcast.to(gameName).emit('notification', `${playerName} trades with ${name}`);
         socket.broadcast.to(gameName).emit('game:data', data[gameName]);
         res(null, data[gameName]);
     });
@@ -408,13 +424,14 @@ io.on('connection', (socket) => {
             data[gameName].players[player].response.trade = null;
         }
         data[gameName].trade = null;
+        socket.broadcast.to(gameName).emit('notification', `${playerName} does not accept any trade`);
         socket.broadcast.to(gameName).emit('game:data', data[gameName]);
         res(null, data[gameName]);
     });
 
     //End game
     socket.on('disconnect', () => {
-        if(data[gameName] !== undefined) {
+        if(data[gameName] !== undefined && data[gameName].players[playerName] !== undefined) {
             //Disconnect the player
             data[gameName].players[playerName].connected = false;
             //Remove the game from the memory if all players are gone
