@@ -450,8 +450,15 @@ io.on('connection', (socket) => {
 
     //Chat
     socket.on('chat:post', (msg) => {
+        let swears = /\b(shit|fuck|bitch|ass|hell|crap|dick)\b/gi;
+        let replacements = [
+            "bubblegum", "puff", "strudel", "clouds",
+            "the entire population of France", "emu",
+            "goose", "jello", "piccolo", "spaceship",
+            "pentagon", "dandelion", "happy meal" ];
+
         io.to(gameName).emit('chat:message', {
-            body: msg,
+            body: msg.replace(swears, replacements[Math.floor(Math.random() * replacements.length)]),
             author: playerName,
             time: Date.now()
         });
