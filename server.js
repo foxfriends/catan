@@ -446,11 +446,17 @@ io.on('connection', (socket) => {
             }
         }
     });
-
-
     //Chat
     socket.on('chat:post', (msg) => {
-        let swears = /\b(shit|fuck|bitch|ass|hell|crap|dick)\b/gi;
+        let swears = new RegExp("\\b(" +
+            "(bull)?s[\\s\\.]*h[\\s\\.-]*i[\\s\\.-]*t([\\s\\.]*t)?|" +
+            "f[\\s\\.]*u[\\s\\.]*c[\\s\\.]*k|" +
+            "b[\\s\\.]*i[\\s\\.]*t[\\s\\.]*c[\\s\\.]*h|" +
+            "(bad|smart)?a[\\s\\.]*s[\\s\\.]*s(hole)?|" +
+            "h[\\s\\.]*e[\\s\\.]*l[\\s\\.]*l|" +
+            "c[\\s\\.]*r[\\s\\.]*a[\\s\\.]*p|" +
+            "d[\\s\\.]*i[\\s\\.]*c[\\s\\.]*k" +
+        ")(ed|ing|er)?(s|y)?\\b", "gi");
         let replacements = [
             "bubblegum", "puff", "strudel", "clouds",
             "the entire population of France", "emu",
