@@ -450,11 +450,11 @@ io.on('connection', (socket) => {
     socket.on('chat:post', (msg) => {
         let swears = new RegExp("\\b((" +
             "(bull)?s[\\s\\.]*h[\\s\\.-]*i[\\s\\.-]*t([\\s\\.]*t)?|" +
-            "f[\\s\\.]*u[\\s\\.]*c[\\s\\.]*k|" +
+            "(dumb)?f[\\s\\.]*u[\\s\\.]*c[\\s\\.]*k|" +
             "b[\\s\\.]*i[\\s\\.]*t[\\s\\.]*c[\\s\\.]*h|" +
-            "(bad|smart)?a[\\s\\.]*s[\\s\\.]*s(hole)?|" +
+            "(bad|smart|dumb)?a[\\s\\.]*s[\\s\\.]*s(hole)?|" +
             "h[\\s\\.]*e[\\s\\.]*l[\\s\\.]*l|" +
-            "c[\\s\\.]*r[\\s\\.]*a[\\s\\.]*p|" +
+            "(bull)?c[\\s\\.]*r[\\s\\.]*a[\\s\\.]*p|" +
             "d[\\s\\.]*i[\\s\\.]*c[\\s\\.]*k" +
         ")(ed|ing|er)?(s|y)?)+\\b", "gi");
         let replacements = [
