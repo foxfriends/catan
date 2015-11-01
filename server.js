@@ -22,7 +22,7 @@ io.on('connection', (socket) => {
     });
     //Main game events
     socket.on('game:join', ([g, p], res) => {
-        gameName = g;
+        gameName = encodeURIComponent(g);
         playerName = p;
         console.log(`${playerName} is attempting to join ${gameName}`);
         socket.join(gameName);
@@ -455,13 +455,16 @@ io.on('connection', (socket) => {
             "(bad|smart|dumb)?a[\\s\\.]*s[\\s\\.]*s(hole)?|" +
             "h[\\s\\.]*e[\\s\\.]*l[\\s\\.]*l|" +
             "(bull)?c[\\s\\.]*r[\\s\\.]*a[\\s\\.]*p|" +
-            "d[\\s\\.]*i[\\s\\.]*c[\\s\\.]*k" +
-        ")(ed|ing|er)?(s|y)?)+\\b", "gi");
+            "d[\\s\\.]*i[\\s\\.]*c[\\s\\.]*k|" +
+            "p[\\s\\.]e[\\s\\.]*n[\\s\\.]*i[\\s\\.]*s|" +
+            "t[\\s\\.]*i[\\s\\.]*t([\\s\\.]t)?" +
+        ")(ed|ing|er)?(e|ie|y)?s?)+\\b", "gi");
         let replacements = [
             "bubblegum", "puff", "strudel", "clouds",
             "the entire population of France", "emu",
             "goose", "jello", "piccolo", "spaceship",
-            "pentagon", "dandelion", "happy meal" ];
+            "pentagon", "dandelion", "happy meal",
+            "left half of a baked potato", "true friend"];
 
         io.to(gameName).emit('chat:message', {
             body: msg.replace(swears, replacements[Math.floor(Math.random() * replacements.length)]),

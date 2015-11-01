@@ -22,7 +22,7 @@ import {Robber} from './robber.es6';
 import {Trade} from './trade.es6';
 import {DevCard} from './devcard.es6';
 import {Catan} from './catan.es6';
-import {arrange} from './arrange.es6';
+import {arrange, setMystery} from './arrange.es6';
 import {showAlert} from './alert.es6';
 
 //Catan game runner
@@ -63,6 +63,9 @@ let run = (function* () {
             while(data.players[player].color === '') {
                 //Keep going until an unchosen colour is selected
                 data = yield catan.chooseColorShow(data);
+            }
+            if(game[game.length - 1] === '?') {
+                setMystery(true);
             }
             arrange(data, player);
         }

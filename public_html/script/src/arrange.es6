@@ -1,5 +1,6 @@
 'use strict';
 import {CONST} from './const.es6';
+import {adjacent} from './adjacent.es6';
 import {default as $} from 'jquery';
 
 export let countVPs = (data, player, your_name) => {
@@ -19,16 +20,29 @@ export let countVPs = (data, player, your_name) => {
     return vps;
 };
 
+let mystery = false;
+export let setMystery = (v) => {
+    mystery = v;
+};
+
 export let arrange = (data, your_name) => {
     $('.tile_row').each(function(i) {
         $(this).children('.tile').each(function(j) {
+            let isAdjacent = false;
+            adjacent(i, j, 'tile', 'house').forEach(([i,j]) => {
+                if(data.houses[i][j][0] !== 0) {
+                    isAdjacent = true;
+                }
+            });
+            console.log(mystery, isAdjacent, data.gameState);
+            let show = !mystery || (isAdjacent && data.gameState !== CONST.SETUP);
             $(this).css({
                     left: `${200 + (200 * j + 100 * Math.abs(i - 2))}px`,
                     top: `${174 * i}px`}
                 )
-            .attr('class', `tile ${['pasture','field','forest','quarry','mountain','desert','water'][data.tiles[i][j][0]]}`)
+            .attr('class', `tile ${['pasture','field','forest','quarry','mountain','desert','water'][show ? data.tiles[i][j][0] : 6]}`)
             .html('')
-            .append(data.tiles[i][j][1] === 7 ? '' : $('<span></span>')
+            .append((data.tiles[i][j][1] === 7 || !show) ? '' : $('<span></span>')
                 .addClass(`number ${[6,8].indexOf(data.tiles[i][j][1]) !== -1 ? 'red' : ''}`)
                 .text(data.tiles[i][j][1])
             )
@@ -36,7 +50,7 @@ export let arrange = (data, your_name) => {
                 .attr('src', '/image/robber.png')
                 .addClass('robber')
                 .css({
-                    opacity: (data.robber[0] === i && data.robber[1] === j) ? 1 : 0,
+                    opacity: (data.robber[0] === i && data.robber[1] === j && show) ? 1 : 0,
                     cursor: 'default'
                 })
                 .off('click')
@@ -100,7 +114,7 @@ export let arrange = (data, your_name) => {
                         'background-color': data.players[data.houses[i][j][1]].color,
                         'border-bottom-color': data.players[data.houses[i][j][1]].color,
                         color: data.players[data.houses[i][j][1]].color,
-                    })
+                    });
                 }
             if(data.houses[i][j][0] === 2) {
                 $(this).addClass('city');
