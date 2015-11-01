@@ -68,10 +68,23 @@ export let arrange = (data, your_name) => {
         [300, 174 * 5, -60],[700, 174 * 5, -120]
     ];
     $('.port').each(function(i) {
+        let show = !mystery;
+        if(data.gameState !== CONST.SETUP) {
+            for(let j = 0; j < data.houses.length; j++) {
+                for(let k = 0; k < data.houses[j].length; k++) {
+                    if(data.houses[j][k][0] !== 0) {
+                        if(adjacent(j, k, 'house', 'port') === i) {
+                            show = true;
+                        }
+                    }
+                }
+            }
+        }
         $(this).css({
                 left: `${portPos[i][0]}px`,
                 top: `${portPos[i][1]}px`,
-                transform: `rotate(${portPos[i][2]}deg)`
+                transform: `rotate(${portPos[i][2]}deg)`,
+                display: show ? 'block' : 'none'
         })
         .attr('class', `port ${['pasture','field','forest','quarry','mountain','any'][data.ports[i]]}`)
         .html('');
