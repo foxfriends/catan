@@ -321,7 +321,7 @@ io.on('connection', (socket) => {
             }
         }
         let resourceName = ['Wool', 'Wheat', 'Wood', 'Brick', 'Ore'];
-        socket.broadcast.to(gameName).emit('notification', `${playerName} played a ${resourceName[which]} card`);
+        socket.broadcast.to(gameName).emit('notification', `${playerName} took all ${resourceName[which]} cards`);
         socket.broadcast.to(gameName).emit('game:data', data[gameName]);
         res(null, data[gameName]);
     });
