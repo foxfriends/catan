@@ -69,6 +69,8 @@ div#alert {
     @include transition(opacity 0.5s);
     @include border-radius(15px);
 
+    pointer-events: none;
+
     &.error {
         opacity: 1;
         border: 1px solid rgba(74, 20, 20, 0.8);
