@@ -329,6 +329,7 @@ div.player {
     height: $playerBoxHeight;
     width: 30%;
     z-index: 2;
+    font-size: 14pt;
 
     background-color: RGBA(255, 255, 255, 0.5);
 
@@ -337,6 +338,15 @@ div.player {
 
     &.robber-trouble {
         border: 2px solid red !important;
+    }
+
+    .cards {
+      display: flex;
+      align-items: center;
+
+      img {
+        margin: 0 4px 0 10px;
+      }
     }
 }
 div.overlay {
