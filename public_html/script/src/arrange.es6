@@ -34,7 +34,6 @@ export let arrange = (data, your_name) => {
                     isAdjacent = true;
                 }
             });
-            console.log(mystery, isAdjacent, data.gameState);
             let show = !mystery || (isAdjacent && data.gameState !== CONST.SETUP);
             $(this).css({
                     left: `${200 + (200 * j + 100 * Math.abs(i - 2))}px`,

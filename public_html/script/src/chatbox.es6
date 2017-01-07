@@ -14,7 +14,10 @@ let close = () => {
         timeout = undefined;
     }
     container
-        .css('max-height', `${32 + $('.message').last().innerHeight()}px`);
+        .css({
+            'max-height': `${32 + $('.message').last().innerHeight()}px`,
+            'pointer-events': 'none'
+        });
     msgContainer
         .scrollTop(messages.height())
         .css('overflow', 'hidden');
@@ -27,9 +30,12 @@ let half = () => {
     }
     timeout = window.setTimeout(close, 6000);
     container
-        .css('max-height', '250px');
+        .css({
+            'max-height': '250px',
+            'pointer-events': 'none'
+        });
     msgContainer.scrollTop(messages.height())
-        .css('overflow', 'auto');
+        .css('overflow', 'hidden');
 };
 
 let full = () => {
@@ -38,7 +44,10 @@ let full = () => {
         timeout = undefined;
     }
     container
-        .css('max-height', '500px');
+        .css({
+            'max-height': '500px',
+            'pointer-events': 'auto'
+        });
     msgContainer.scrollTop(messages.height())
         .css('overflow', 'auto');
 };
@@ -77,11 +86,11 @@ let add = (msg) => {
 let disallow = () => {
     input
         .off('blur')
-        .blur()
         .focus(function() {
             full();
             chatting = true;
         })
+        .blur()
         .css('pointer-events', 'none');
 };
 disallow();
@@ -89,12 +98,12 @@ disallow();
 let allow = () => {
     input
         .off('focus')
-        .focus()
         .blur(function() {
             half();
             chatting = false;
         })
-        .css('pointer-events', 'default');
+        .focus()
+        .css('pointer-events', 'auto');
 };
 
 export let chat = (socket) => {
@@ -104,7 +113,7 @@ export let chat = (socket) => {
             half();
         }
     });
-    return (e) => {
+    $(document).keypress((e) => {
         let dont = false;
         $('.overlay').each(function() {
             if($(this).css('display') !== '' && $(this).css('display') !== 'none') {
@@ -126,5 +135,5 @@ export let chat = (socket) => {
                 allow();
             }
         }
-    };
+    });
 };

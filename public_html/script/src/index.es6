@@ -1,9 +1,9 @@
 'use strict';
-require('babel/polyfill');
+require('babel-polyfill');
 require('../../style/src/main.scss');
 
-import {default as $} from 'jquery';
-import {default as io} from 'socket.io-client';
+import $ from 'jquery';
+import io from 'socket.io-client';
 
 let socket = io();
 socket.on('error', (e) => {
@@ -218,6 +218,6 @@ let run = (function* () {
 run.next();
 
 //Chat
-$(document).keydown(chat(socket));
+chat(socket);
 
 //Playlist

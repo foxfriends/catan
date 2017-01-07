@@ -195,7 +195,7 @@ div {
     }
     &.devcard {
         @extend div.card;
-        width: ($tileHeight / 4) * (64px / 96px);
+        width: ($tileHeight / 4) * (64 / 96);
         background-repeat: no-repeat;
 
         &.monopoly {
@@ -319,6 +319,11 @@ div#houses {
         pointer-events: auto;
     }
 }
+
+.buildable {
+  z-index: 1;
+}
+
 div.player {
     position: fixed;
     height: $playerBoxHeight;
