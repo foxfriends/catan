@@ -1,18 +1,27 @@
 'use strict';
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = {
+    mode: 'development',
     entry: './public_html/script/src/index.es6',
     output: {
-        path: './public_html/',
-        filename: 'script/catan.js'
+        path: path.resolve('public_html'),
+        filename: 'catan.js'
     },
     module: {
-        loaders: [
-            { test: /\.scss$/, loader: ExtractTextPlugin.extract('style', 'css!sass') },
-            { test: /\.es6$/, loader: 'babel' }
+        rules: [
+            {
+                test: /\.scss$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    'sass-loader',
+                ],
+            },
+            { test: /\.es6$/ }
         ]
     },
     plugins: [
-        new ExtractTextPlugin('style/main.css')
+        new MiniCssExtractPlugin()
     ]
 };
