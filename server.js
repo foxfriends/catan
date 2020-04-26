@@ -1,8 +1,8 @@
 'use strict';
 let express = require('express');
 let app = express();
-let server = app.listen(8888, () => {
-    console.log('Server started at 8888');
+let server = app.listen(process.env.catan_port || 8888, () => {
+    console.log(`Server started at ${process.env.catan_port || 8888}`);
 });
 app.use('', express.static('public_html'));
 
