@@ -1,0 +1,15 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: cameldridge.com
+    steps:
+      - name: Trigger deploy
+        run: |
+          curl https://console.cameldridge.com/deploy2/catan --header "X-Deploy-Secret: $DEPLOY_SECRET"
+        env:
+          DEPLOY_SECRET: ${{ secrets.DEPLOY_SECRET }}
