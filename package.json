@@ -24,12 +24,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OinkIguana/Catan.git"
+    "url": "git+https://github.com/foxfriends/Catan.git"
   },
   "bugs": {
-    "url": "https://github.com/OinkIguana/Catan/issues"
+    "url": "https://github.com/foxfriends/Catan/issues"
   },
-  "homepage": "https://github.com/OinkIguana/Catan#readme",
+  "homepage": "https://github.com/foxfriends/Catan#readme",
   "devDependencies": {
     "@babel/core": "^7.8.7",
     "babel-cli": "^6.26.0",
