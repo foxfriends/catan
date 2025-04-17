@@ -46,7 +46,7 @@ body {
     top: 100px;
     height: 1027px;
 
-    background-image: url("/image/water_tiled.png");
+    background-image: url("../../image/water_tiled.png");
     background-position: 0 100px;
     overflow-x: hidden;
 }
@@ -133,14 +133,14 @@ div {
     &.blue { background-color: blue; }
     &.white { background-color: white; }
 
-    &.pasture, &.wool { background-image: url("/image/wool.png"); }
-    &.field, &.wheat { background-image: url("/image/wheat.png"); }
-    &.forest, &.wood { background-image: url("/image/wood.png"); }
-    &.quarry, &.brick { background-image: url("/image/brick.png"); }
-    &.mountain, &.ore { background-image: url("/image/ore.png"); }
-    &.desert { background-image: url("/image/desert.png"); }
-    &.water { background-image: url("/image/water.png"); }
-    &.any {background-image: url("/image/any.png"); }
+    &.pasture, &.wool { background-image: url("../../image/wool.png"); }
+    &.field, &.wheat { background-image: url("../../image/wheat.png"); }
+    &.forest, &.wood { background-image: url("../../image/wood.png"); }
+    &.quarry, &.brick { background-image: url("../../image/brick.png"); }
+    &.mountain, &.ore { background-image: url("../../image/ore.png"); }
+    &.desert { background-image: url("../../image/desert.png"); }
+    &.water { background-image: url("../../image/water.png"); }
+    &.any {background-image: url("../../image/any.png"); }
 }
 
 div {
@@ -156,7 +156,7 @@ div {
         @include transition(left 0.5s, top 0.5s);
     }
     &.card {
-        @extend div.tile;
+        @extend .tile;
 
         width: $tileWidth / 4;
         height: $tileHeight / 4;
@@ -184,7 +184,7 @@ div {
         margin: 0 auto;
     }
     &.resource-container {
-        @extend div.devcard-container;
+        @extend .devcard-container;
 
         width: $tileWidth / 4 * 5;
 
@@ -194,28 +194,28 @@ div {
         }
     }
     &.devcard {
-        @extend div.card;
+        @extend .card;
         width: ($tileHeight / 4) * (64 / 96);
         background-repeat: no-repeat;
 
         &.monopoly {
             left: 0;
-            background-image: url("/image/monopoly.png");
+            background-image: url("../../image/monopoly.png");
         }
         &.road-building {
             left: $tileWidth / 4;
-            background-image: url("/image/road_building.png");
+            background-image: url("../../image/road_building.png");
         }
         &.year-of-plenty {
             left: $tileWidth / 2;
-            background-image: url("/image/year_of_plenty.png");
+            background-image: url("../../image/year_of_plenty.png");
         }
     }
 }
 
 div {
     &.port {
-        @extend div.tile;
+        @extend .tile;
 
         z-index: -1;
 

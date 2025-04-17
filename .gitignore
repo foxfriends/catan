@@ -78,4 +78,5 @@ $RECYCLE.BIN/
 /games/
 /public_html/catan.js
 /public_html/main.css
+/public_html/*.png
 .jshintrc
