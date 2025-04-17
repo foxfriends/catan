@@ -8,12 +8,12 @@ app.use('', express.static('public_html'));
 
 let io = require('socket.io')(server);
 
-let game = require('./game.es6');
+let game = require('./game.js');
 let data = {};
 
-let {CONST} = require('./public_html/script/src/const.es6');
-let {adjacent} = require('./public_html/script/src/adjacent.es6');
-let {countVPs} = require('./public_html/script/src/arrange.es6');
+let {CONST} = require('./public_html/script/src/const.js');
+let {adjacent} = require('./public_html/script/src/adjacent.js');
+let {countVPs} = require('./public_html/script/src/arrange.js');
 
 io.on('connection', (socket) => {
     let playerName, gameName;
