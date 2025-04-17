@@ -4,7 +4,6 @@
   "description": "Online version of the game by Klaus Teuber",
   "main": "server.js",
   "scripts": {
-    "test": "",
     "start": "babel-node server.js",
     "build": "webpack"
   },
@@ -44,6 +43,7 @@
     "webpack-cli": "^6.0.1"
   },
   "engines": {
-    "node": "16.x.x"
+    "node": "22.14.0",
+    "npm": "10.9.2"
   }
 }
