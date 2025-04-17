@@ -1,6 +1,6 @@
 'use strict';
 let fs = require("fs");
-let {adjacent} = require("./public_html/script/src/adjacent.es6");
+let {adjacent} = require("./public_html/script/src/adjacent.js");
 
 let shuffle = (array) => {
     for(var i = array.length; i > 0; i--) {

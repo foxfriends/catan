@@ -1,8 +1,8 @@
 'use strict';
 
-import {CONST} from './const.es6';
+import {CONST} from './const.js';
 import {default as $} from 'jquery';
-import {adjacent} from './adjacent.es6';
+import {adjacent} from './adjacent.js';
 
 const GEN = Symbol(), SOCKET = Symbol(), PLAYER = Symbol();
 

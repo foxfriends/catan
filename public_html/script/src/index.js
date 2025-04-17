@@ -14,16 +14,16 @@ socket.on('notification', (m) => {
     showAlert(m, 'notification');
 });
 
-import {chat} from './chatbox.es6';
+import {chat} from './chatbox.js';
 
-import {CONST} from './const.es6';
-import {Build} from './build.es6';
-import {Robber} from './robber.es6';
-import {Trade} from './trade.es6';
-import {DevCard} from './devcard.es6';
-import {Catan} from './catan.es6';
-import {arrange, setMystery} from './arrange.es6';
-import {showAlert} from './alert.es6';
+import {CONST} from './const.js';
+import {Build} from './build.js';
+import {Robber} from './robber.js';
+import {Trade} from './trade.js';
+import {DevCard} from './devcard.js';
+import {Catan} from './catan.js';
+import {arrange, setMystery} from './arrange.js';
+import {showAlert} from './alert.js';
 
 //Catan game runner
 

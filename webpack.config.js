@@ -3,7 +3,7 @@ const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 module.exports = {
   mode: "development",
-  entry: "./public_html/script/src/index.es6",
+  entry: "./public_html/script/src/index.js",
   output: {
     path: path.resolve("public_html"),
     filename: "catan.js",
@@ -15,7 +15,6 @@ module.exports = {
         test: /\.scss$/,
         use: [MiniCssExtractPlugin.loader, "css-loader", "fast-sass-loader"],
       },
-      { test: /\.es6$/ },
       { test: /\.png$/, type: 'asset/resource' },
     ],
   },

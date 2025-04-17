@@ -1,8 +1,8 @@
 'use strict';
 
-import {CONST} from './const.es6';
+import {CONST} from './const.js';
 import {default as $} from 'jquery';
-import {showAlert} from './alert.es6';
+import {showAlert} from './alert.js';
 const GEN = Symbol(), SOCKET = Symbol(), PLAYER = Symbol();
 
 export class DevCard {
