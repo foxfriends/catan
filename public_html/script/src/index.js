@@ -1,5 +1,4 @@
 'use strict';
-require('babel-polyfill');
 require('../../style/src/main.scss');
 
 import $ from 'jquery';
