@@ -1,5 +1,5 @@
 'use strict';
-require('../../style/src/main.scss');
+import '../../style/src/main.scss';
 
 import $ from 'jquery';
 import io from 'socket.io-client';

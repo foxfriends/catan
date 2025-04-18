@@ -1,3 +1,11 @@
-node_modules
-.git
-.github
+/node_modules
+/.git
+/.github
+/README.md
+/Dockerfile
+.DS_Store
+/public_html/catan.js
+/public_html/*.css
+/public_html/*.png
+/games/
+/terraform/

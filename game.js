@@ -1,6 +1,6 @@
 'use strict';
-let fs = require("fs");
-let {adjacent} = require("./public_html/script/src/adjacent.js");
+import fs from "node:fs";
+import {adjacent} from "./public_html/script/src/adjacent.js";
 
 let shuffle = (array) => {
     for(var i = array.length; i > 0; i--) {
@@ -13,7 +13,7 @@ let shuffle = (array) => {
 class Game {
     exists(name) {
         try {
-            fs.statSync(`games/${name}.game`);
+            fs.statSync(`./games/${name}.game`);
             return true;
         } catch(e) {
             return false;
@@ -147,4 +147,4 @@ class Game {
     }
 }
 
-module.exports = new Game();
+export default new Game();

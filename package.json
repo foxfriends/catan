@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Online version of the game by Klaus Teuber",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "start": "node server.js",
     "build": "webpack"

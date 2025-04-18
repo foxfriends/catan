@@ -1,19 +1,23 @@
 'use strict';
-let express = require('express');
+import express from 'express';
 let app = express();
 let server = app.listen(process.env.catan_port || 8888, () => {
     console.log(`Server started at ${process.env.catan_port || 8888}`);
 });
+app.use('/health', (req, res) => {
+  res.send('Ok');
+});
 app.use('', express.static('public_html'));
 
-let io = require('socket.io')(server);
+import { Server } from 'socket.io';
+const io = new Server(server);
 
-let game = require('./game.js');
+import game from './game.js';
 let data = {};
 
-let {CONST} = require('./public_html/script/src/const.js');
-let {adjacent} = require('./public_html/script/src/adjacent.js');
-let {countVPs} = require('./public_html/script/src/arrange.js');
+import {CONST} from './public_html/script/src/const.js';
+import {adjacent} from './public_html/script/src/adjacent.js';
+import {countVPs} from './public_html/script/src/arrange.js';
 
 io.on('connection', (socket) => {
     let playerName, gameName;
