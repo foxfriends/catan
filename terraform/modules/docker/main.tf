@@ -8,7 +8,8 @@ terraform {
 }
 
 locals {
-  image = "${var.image_name}:${var.image_version}"
+  image         = "${var.image_name}:${var.image_version}"
+  internal_port = 3000
 }
 
 data "docker_registry_image" "catan" {
@@ -29,8 +30,13 @@ resource "docker_container" "catan" {
   name    = var.name
   restart = var.restart
 
-  ports {
-    internal = 3000
+  dynamic "ports" {
+    for_each = var.expose ? [var.port] : []
+
+    content {
+      internal = local.internal_port
+      external = ports.value
+    }
   }
 
   volumes {
@@ -41,8 +47,17 @@ resource "docker_container" "catan" {
 
   network_mode = "bridge"
 
+  dynamic "networks_advanced" {
+    for_each = var.networks
+    iterator = net
+
+    content {
+      name = net.value["name"]
+    }
+  }
+
   healthcheck {
-    test         = ["CMD", "curl", "-f", "localhost:3000/health"]
+    test         = ["CMD", "curl", "-f", "localhost:${local.internal_port}/health"]
     interval     = "5s"
     retries      = 2
     start_period = "1s"
@@ -50,6 +65,6 @@ resource "docker_container" "catan" {
   }
 
   env = [
-    "catan_port=3000",
+    "catan_port=${local.internal_port}",
   ]
 }
